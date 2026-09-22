@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+
+# DuckDB & SQLite
+cargox.duckdb
+cargox.duckdb.wal
+*.db
+*.db-wal
+*.db-shm
+
+# Environment
+.env

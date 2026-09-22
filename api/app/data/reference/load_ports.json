@@ -1,0 +1,74 @@
+[
+  {
+    "id": "port_hedland",
+    "name": "Port Hedland",
+    "country": "AU",
+    "lat": -20.3108,
+    "lng": 118.5753,
+    "primary_cargo": ["iron_ore"],
+    "notes": "World's largest bulk-export port. BHP/Fortescue iron ore."
+  },
+  {
+    "id": "dampier",
+    "name": "Dampier",
+    "country": "AU",
+    "lat": -20.6611,
+    "lng": 116.7133,
+    "primary_cargo": ["iron_ore"],
+    "notes": "Rio Tinto's primary Pilbara iron ore export terminal."
+  },
+  {
+    "id": "newcastle",
+    "name": "Newcastle",
+    "country": "AU",
+    "lat": -32.9283,
+    "lng": 151.7817,
+    "primary_cargo": ["coal"],
+    "notes": "World's largest coal export port (thermal + coking)."
+  },
+  {
+    "id": "hay_point",
+    "name": "Hay Point",
+    "country": "AU",
+    "lat": -21.2750,
+    "lng": 149.2917,
+    "primary_cargo": ["coal"],
+    "notes": "Major coking-coal export terminal in Queensland. Adjacent to Dalrymple Bay."
+  },
+  {
+    "id": "gladstone",
+    "name": "Gladstone",
+    "country": "AU",
+    "lat": -23.8489,
+    "lng": 151.2694,
+    "primary_cargo": ["coal", "alumina", "lng"],
+    "notes": "Multi-commodity port; large thermal coal exports."
+  },
+  {
+    "id": "richards_bay",
+    "name": "Richards Bay",
+    "country": "ZA",
+    "lat": -28.7830,
+    "lng": 32.0377,
+    "primary_cargo": ["coal"],
+    "notes": "Richards Bay Coal Terminal — South Africa's primary coal export facility."
+  },
+  {
+    "id": "samarinda",
+    "name": "Samarinda (Muara Berau)",
+    "country": "ID",
+    "lat": -0.5022,
+    "lng": 117.1536,
+    "primary_cargo": ["coal"],
+    "notes": "East Kalimantan coal export area. Barge-loaded anchorage operations common."
+  },
+  {
+    "id": "banjarmasin",
+    "name": "Banjarmasin (Taboneo)",
+    "country": "ID",
+    "lat": -3.4382,
+    "lng": 114.8500,
+    "primary_cargo": ["coal"],
+    "notes": "South Kalimantan coal transhipment hub. Predominantly barge-to-vessel loading."
+  }
+]

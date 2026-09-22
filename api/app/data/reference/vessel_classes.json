@@ -1,0 +1,72 @@
+[
+  {
+    "class": "Handysize",
+    "dwt_min": 15000,
+    "dwt_max": 40000,
+    "typical_loa_m": 170,
+    "typical_beam_m": 27,
+    "typical_draft_m": 10.0,
+    "service_speed_kn": 13.5,
+    "ballast_speed_kn": 14.5,
+    "consumption_laden_mt_per_day": 22,
+    "consumption_ballast_mt_per_day": 18,
+    "baltic_index": "BHSI",
+    "notes": "Geared; self-loading/unloading. Common for Indian minor ports."
+  },
+  {
+    "class": "Supramax",
+    "dwt_min": 40000,
+    "dwt_max": 65000,
+    "typical_loa_m": 190,
+    "typical_beam_m": 32,
+    "typical_draft_m": 12.8,
+    "service_speed_kn": 14.0,
+    "ballast_speed_kn": 15.0,
+    "consumption_laden_mt_per_day": 28,
+    "consumption_ballast_mt_per_day": 23,
+    "baltic_index": "BSI",
+    "notes": "Geared; workhorse of Indian coal/ore trade. Replaces old Handymax designation."
+  },
+  {
+    "class": "Panamax",
+    "dwt_min": 65000,
+    "dwt_max": 80000,
+    "typical_loa_m": 225,
+    "typical_beam_m": 32.2,
+    "typical_draft_m": 14.0,
+    "service_speed_kn": 14.0,
+    "ballast_speed_kn": 15.0,
+    "consumption_laden_mt_per_day": 32,
+    "consumption_ballast_mt_per_day": 26,
+    "baltic_index": "BPI",
+    "notes": "Gearless; most common vessel class for Indian coal imports."
+  },
+  {
+    "class": "Kamsarmax",
+    "dwt_min": 80000,
+    "dwt_max": 84000,
+    "typical_loa_m": 229,
+    "typical_beam_m": 32.3,
+    "typical_draft_m": 14.4,
+    "service_speed_kn": 14.0,
+    "ballast_speed_kn": 15.0,
+    "consumption_laden_mt_per_day": 34,
+    "consumption_ballast_mt_per_day": 27,
+    "baltic_index": "BPI",
+    "notes": "Gearless; max-length Panamax variant (named after Kamsar, Guinea). Uses BPI for hire approximation."
+  },
+  {
+    "class": "Capesize",
+    "dwt_min": 100000,
+    "dwt_max": 210000,
+    "typical_loa_m": 292,
+    "typical_beam_m": 45,
+    "typical_draft_m": 18.2,
+    "service_speed_kn": 14.5,
+    "ballast_speed_kn": 15.5,
+    "consumption_laden_mt_per_day": 45,
+    "consumption_ballast_mt_per_day": 36,
+    "baltic_index": "BCI",
+    "notes": "Gearless; too large for Panama Canal (pre-expansion). Iron ore/coal on long-haul routes. Requires deep-water ports."
+  }
+]

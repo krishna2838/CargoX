@@ -1,0 +1,122 @@
+{
+  "BDI": {
+    "target_index": "BDI",
+    "n_samples": 6242,
+    "n_folds": 12,
+    "horizon_days": 28,
+    "lightgbm": {
+      "p50_mape_pct": 11.45,
+      "pinball_loss_p10": 41.88,
+      "pinball_loss_p50": 120.76,
+      "pinball_loss_p90": 80.67,
+      "pinball_loss_avg": 81.1,
+      "interval_coverage_80pct": 66.7
+    },
+    "seasonal_naive": {
+      "p50_mape_pct": 31.13,
+      "pinball_loss_avg": 199.42
+    },
+    "sarima": {
+      "status": "ok",
+      "p50_mape_pct": 26.06,
+      "pinball_loss_p50": 177.8
+    },
+    "beats_seasonal_naive_on_pinball": true
+  },
+  "BCI": {
+    "target_index": "BCI",
+    "n_samples": 6242,
+    "n_folds": 12,
+    "horizon_days": 28,
+    "lightgbm": {
+      "p50_mape_pct": 19.09,
+      "pinball_loss_p10": 88.65,
+      "pinball_loss_p50": 251.49,
+      "pinball_loss_p90": 116.13,
+      "pinball_loss_avg": 152.09,
+      "interval_coverage_80pct": 66.7
+    },
+    "seasonal_naive": {
+      "p50_mape_pct": 48.04,
+      "pinball_loss_avg": 379.89
+    },
+    "sarima": {
+      "status": "ok",
+      "p50_mape_pct": 48.93,
+      "pinball_loss_p50": 466.59
+    },
+    "beats_seasonal_naive_on_pinball": true
+  },
+  "BPI": {
+    "target_index": "BPI",
+    "n_samples": 6242,
+    "n_folds": 12,
+    "horizon_days": 28,
+    "lightgbm": {
+      "p50_mape_pct": 12.16,
+      "pinball_loss_p10": 48.67,
+      "pinball_loss_p50": 125.9,
+      "pinball_loss_p90": 78.01,
+      "pinball_loss_avg": 84.19,
+      "interval_coverage_80pct": 66.7
+    },
+    "seasonal_naive": {
+      "p50_mape_pct": 27.47,
+      "pinball_loss_avg": 175.53
+    },
+    "sarima": {
+      "status": "ok",
+      "p50_mape_pct": 13.25,
+      "pinball_loss_p50": 88.25
+    },
+    "beats_seasonal_naive_on_pinball": true
+  },
+  "BSI": {
+    "target_index": "BSI",
+    "n_samples": 6242,
+    "n_folds": 12,
+    "horizon_days": 28,
+    "lightgbm": {
+      "p50_mape_pct": 7.54,
+      "pinball_loss_p10": 23.8,
+      "pinball_loss_p50": 68.49,
+      "pinball_loss_p90": 38.49,
+      "pinball_loss_avg": 43.6,
+      "interval_coverage_80pct": 66.7
+    },
+    "seasonal_naive": {
+      "p50_mape_pct": 22.37,
+      "pinball_loss_avg": 119.77
+    },
+    "sarima": {
+      "status": "ok",
+      "p50_mape_pct": 3.09,
+      "pinball_loss_p50": 14.88
+    },
+    "beats_seasonal_naive_on_pinball": true
+  },
+  "BHSI": {
+    "target_index": "BHSI",
+    "n_samples": 6242,
+    "n_folds": 12,
+    "horizon_days": 28,
+    "lightgbm": {
+      "p50_mape_pct": 10.12,
+      "pinball_loss_p10": 28.1,
+      "pinball_loss_p50": 88.46,
+      "pinball_loss_p90": 57.76,
+      "pinball_loss_avg": 58.11,
+      "interval_coverage_80pct": 66.7
+    },
+    "seasonal_naive": {
+      "p50_mape_pct": 23.82,
+      "pinball_loss_avg": 123.93
+    },
+    "sarima": {
+      "status": "ok",
+      "p50_mape_pct": 4.52,
+      "pinball_loss_p50": 33.78
+    },
+    "beats_seasonal_naive_on_pinball": true
+  }
+}

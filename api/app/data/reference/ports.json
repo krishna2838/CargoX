@@ -1,0 +1,198 @@
+[
+  {
+    "id": "paradip",
+    "name": "Paradip",
+    "lat": 20.2644,
+    "lng": 86.6277,
+    "source": "Paradip Port Authority / Indian Ports Association",
+    "max_draft_m": 14.5,
+    "max_loa_m": 260,
+    "max_beam_m": 40,
+    "cargo_types": ["coal", "iron_ore", "chrome_ore", "manganese_ore", "limestone", "fertilizer"],
+    "notes": "Major east-coast ore/coal hub. Inner harbour limited to ~12.5 m draft; deep-water berths accept Capesizes.",
+    "avg_turnaround_hours": 96,
+    "berths": [
+      {
+        "name": "Central Quay (CQ-1 to CQ-4)",
+        "max_draft_m": 12.5,
+        "max_loa_m": 225,
+        "suited_for": ["Handysize", "Supramax", "Panamax"]
+      },
+      {
+        "name": "Deep-water Mechanised Coal Handling Plant (MCHP)",
+        "max_draft_m": 14.5,
+        "max_loa_m": 260,
+        "suited_for": ["Panamax", "Kamsarmax", "Capesize"],
+        "_TODO": "Verify 14.5 m against latest hydrographic survey — some sources cite 14.0 m"
+      }
+    ]
+  },
+  {
+    "id": "visakhapatnam",
+    "name": "Visakhapatnam",
+    "lat": 17.6868,
+    "lng": 83.2185,
+    "source": "Visakhapatnam Port Trust",
+    "max_draft_m": 16.1,
+    "max_loa_m": 300,
+    "max_beam_m": 48,
+    "cargo_types": ["coal", "iron_ore", "crude_oil", "fertilizer", "alumina", "containers"],
+    "notes": "Largest cargo port on India's east coast. Outer harbour (EQ) accepts fully laden Capesizes; inner harbour limited.",
+    "avg_turnaround_hours": 72,
+    "berths": [
+      {
+        "name": "Inner Harbour (General Cargo)",
+        "max_draft_m": 10.7,
+        "max_loa_m": 220,
+        "suited_for": ["Handysize", "Supramax"]
+      },
+      {
+        "name": "Outer Harbour — East Quay (EQ-1 to EQ-4)",
+        "max_draft_m": 16.1,
+        "max_loa_m": 300,
+        "suited_for": ["Panamax", "Kamsarmax", "Capesize"],
+        "_TODO": "Confirm EQ-4 draft; deepening to 18.1 m may be complete by 2027"
+      },
+      {
+        "name": "Outer Harbour — West Quay",
+        "max_draft_m": 14.5,
+        "max_loa_m": 275,
+        "suited_for": ["Panamax", "Kamsarmax"]
+      }
+    ]
+  },
+  {
+    "id": "gangavaram",
+    "name": "Gangavaram",
+    "lat": 17.6217,
+    "lng": 83.2350,
+    "source": "Gangavaram Port Limited",
+    "max_draft_m": 21.0,
+    "max_loa_m": 330,
+    "max_beam_m": 55,
+    "cargo_types": ["coal", "iron_ore", "limestone", "bauxite", "fertilizer", "sugar"],
+    "notes": "India's deepest all-weather port. Fully mechanised coal/iron ore handling. Can accept VLOCs (Very Large Ore Carriers).",
+    "avg_turnaround_hours": 60,
+    "berths": [
+      {
+        "name": "Berth 1 (Coal/Ore)",
+        "max_draft_m": 18.5,
+        "max_loa_m": 330,
+        "suited_for": ["Panamax", "Kamsarmax", "Capesize"]
+      },
+      {
+        "name": "Berth 2 (Multi-cargo)",
+        "max_draft_m": 21.0,
+        "max_loa_m": 330,
+        "suited_for": ["Capesize"],
+        "_TODO": "Verify 21.0 m max draft for VLOC acceptance — some sources cite 19.5 m operational draft"
+      },
+      {
+        "name": "Berth 3 (General)",
+        "max_draft_m": 14.5,
+        "max_loa_m": 250,
+        "suited_for": ["Handysize", "Supramax", "Panamax"]
+      }
+    ]
+  },
+  {
+    "id": "gopalpur",
+    "name": "Gopalpur",
+    "lat": 19.2590,
+    "lng": 84.9022,
+    "source": "Gopalpur Ports Limited (Tata Steel SEZ)",
+    "max_draft_m": 14.5,
+    "max_loa_m": 230,
+    "max_beam_m": 38,
+    "cargo_types": ["coal", "iron_ore", "limestone", "dolomite", "slag"],
+    "notes": "Greenfield port under development, primarily serves Tata Steel. Two-berth initial phase.",
+    "avg_turnaround_hours": 72,
+    "berths": [
+      {
+        "name": "Berth 1 (Bulk)",
+        "max_draft_m": 14.5,
+        "max_loa_m": 230,
+        "suited_for": ["Handysize", "Supramax", "Panamax"],
+        "_TODO": "Verify if Phase 2 deepening to 16 m is complete"
+      }
+    ]
+  },
+  {
+    "id": "dhamra",
+    "name": "Dhamra",
+    "lat": 20.7746,
+    "lng": 86.9530,
+    "source": "Dhamra Port Company Limited (Adani Ports)",
+    "max_draft_m": 18.0,
+    "max_loa_m": 330,
+    "max_beam_m": 52,
+    "cargo_types": ["coal", "iron_ore", "limestone", "fertilizer", "steel"],
+    "notes": "Deep-water greenfield port; designed for fully laden Capesize/VLOC. Mechanised coal import terminal.",
+    "avg_turnaround_hours": 60,
+    "berths": [
+      {
+        "name": "Berth 1 (Coal Import)",
+        "max_draft_m": 18.0,
+        "max_loa_m": 330,
+        "suited_for": ["Panamax", "Kamsarmax", "Capesize"]
+      },
+      {
+        "name": "Berth 2 (Multi-cargo)",
+        "max_draft_m": 16.0,
+        "max_loa_m": 280,
+        "suited_for": ["Panamax", "Kamsarmax", "Capesize"],
+        "_TODO": "Berth 2 deepened — confirm 16.0 m vs 14.5 m"
+      }
+    ]
+  },
+  {
+    "id": "haldia",
+    "name": "Haldia",
+    "lat": 22.0346,
+    "lng": 88.0625,
+    "source": "Kolkata Port Trust (Syama Prasad Mookerjee Port)",
+    "max_draft_m": 9.1,
+    "max_loa_m": 215,
+    "max_beam_m": 32,
+    "cargo_types": ["coal", "iron_ore", "crude_oil", "petroleum", "fertilizer", "containers"],
+    "notes": "River port on Hooghly — severe draft restrictions, tidal-dependent. No Capesize access. Lighterage at Sandheads for larger vessels.",
+    "avg_turnaround_hours": 120,
+    "berths": [
+      {
+        "name": "Haldia Dock Complex (HDC) — Oil Jetty",
+        "max_draft_m": 9.1,
+        "max_loa_m": 215,
+        "suited_for": ["Handysize"]
+      },
+      {
+        "name": "Haldia Dock Complex (HDC) — Bulk Berths",
+        "max_draft_m": 8.5,
+        "max_loa_m": 200,
+        "suited_for": ["Handysize"],
+        "_TODO": "Verify whether recent dredging has improved draft to 9.5 m"
+      }
+    ]
+  },
+  {
+    "id": "sandheads",
+    "name": "Sagar / Sandheads (Kolkata anchorage)",
+    "lat": 21.6500,
+    "lng": 88.0500,
+    "source": "Kolkata Port Trust — anchorage/lighterage records",
+    "max_draft_m": 10.0,
+    "max_loa_m": 260,
+    "max_beam_m": 45,
+    "cargo_types": ["coal", "iron_ore"],
+    "notes": "Offshore anchorage for lighterage into Haldia/Kolkata. Vessels lighter cargo onto smaller barges. Effectively extends Haldia's draft capability at higher cost and slower turnaround.",
+    "avg_turnaround_hours": 168,
+    "berths": [
+      {
+        "name": "Anchorage (lighterage)",
+        "max_draft_m": 10.0,
+        "max_loa_m": 260,
+        "suited_for": ["Handysize", "Supramax", "Panamax"],
+        "_TODO": "Anchorage depth is approximate; depends on monsoon season and dredging schedule"
+      }
+    ]
+  }
+]
