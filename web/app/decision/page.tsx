@@ -25,6 +25,8 @@ import {
   ArrowLeft,
   AlertTriangle,
   RotateCcw,
+  Compass,
+  Navigation,
 } from "lucide-react";
 
 interface DecisionResponse {
@@ -121,6 +123,18 @@ function DecisionContent() {
 
       const data: DecisionResponse = await res.json();
       setDecisionData(data);
+      try {
+        localStorage.setItem(
+          "cargox_last_route",
+          JSON.stringify({
+            load: valuesToRun.load_port_id,
+            dest: valuesToRun.dest_port_id,
+            klass: data.recommendation?.vessel_class || "all",
+            commodity: valuesToRun.commodity,
+            tonnes: valuesToRun.cargo_tonnes,
+          })
+        );
+      } catch (e) {}
     } catch (err: any) {
       console.error("Decision engine API error:", err);
       setError(err.message || "Unable to compute procurement decision.");
@@ -259,6 +273,27 @@ function DecisionContent() {
         {/* ── SUCCESSFUL RESULTS ── */}
         {!loading && decisionData && !error && (
           <div className="space-y-6">
+            {/* View on Map Quick Action */}
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-blue-500/30 bg-blue-500/10 p-3.5 backdrop-blur-md">
+              <div className="flex items-center gap-2.5 font-mono text-xs text-cx-text">
+                <Compass className="h-4 w-4 text-blue-500 shrink-0" />
+                <span>
+                  Optimal trade lane evaluated:{" "}
+                  <strong className="text-blue-500 uppercase">
+                    {formValues.load_port_id} → {formValues.dest_port_id}
+                  </strong>{" "}
+                  ({rec?.vessel_class || "optimal"})
+                </span>
+              </div>
+              <Link
+                href={`/?route=${formValues.load_port_id},${formValues.dest_port_id},${rec?.vessel_class || "all"}&commodity=${formValues.commodity}&tonnes=${formValues.cargo_tonnes}`}
+                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 font-mono text-xs font-semibold text-white hover:bg-blue-500 transition shadow-md shadow-blue-600/20 cursor-pointer"
+              >
+                <Navigation className="h-3.5 w-3.5" />
+                <span>View on Map</span>
+              </Link>
+            </div>
+
             {/* Section 2: Recommendation Banner */}
             {rec && (
               <RecommendationBanner

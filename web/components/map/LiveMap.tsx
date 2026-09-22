@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import React, { useEffect, useState } from "react";
 import { Compass, Radio } from "lucide-react";
 import type { PortData, VesselItem } from "./LiveMapInner";
+import type { RouteData } from "./RouteLayer";
 
 interface LiveMapProps {
   ports: PortData[];
@@ -11,6 +12,8 @@ interface LiveMapProps {
   selectedMmsi: number | null;
   onSelectVessel: (vessel: VesselItem) => void;
   onSelectPort?: (port: PortData) => void;
+  routes?: RouteData[];
+  selectedVesselClass?: string;
 }
 
 // ── Tactical skeleton placeholder to prevent flash ──────────

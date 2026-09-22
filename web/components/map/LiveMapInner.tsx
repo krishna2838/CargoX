@@ -41,12 +41,16 @@ export interface VesselItem {
   last_seen?: string | null;
 }
 
-interface LiveMapInnerProps {
+import { RouteLayer, RouteData } from "./RouteLayer";
+
+export interface LiveMapInnerProps {
   ports: PortData[];
   vessels: VesselItem[];
   selectedMmsi: number | null;
   onSelectVessel: (vessel: VesselItem) => void;
   onSelectPort?: (port: PortData) => void;
+  routes?: RouteData[];
+  selectedVesselClass?: string;
 }
 
 // ── Color mappings for dry bulk vessel classes ─────────────────────────────
@@ -158,6 +162,8 @@ export function LiveMapInner({
   selectedMmsi,
   onSelectVessel,
   onSelectPort,
+  routes,
+  selectedVesselClass,
 }: LiveMapInnerProps) {
   const { theme } = useTheme();
 
@@ -315,6 +321,13 @@ export function LiveMapInner({
           eventHandlers={{
             load: () => setTilesLoaded(true),
           }}
+        />
+
+        {/* Sea Route Visualisation & Waypoints Overlay */}
+        <RouteLayer
+          routes={routes || []}
+          vessels={vessels}
+          selectedVesselClass={selectedVesselClass}
         />
 
         {/* Discharge Port Markers */}
