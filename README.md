@@ -208,8 +208,8 @@ docker run -p 8000:8000 -e PORT=8000 -e DEMO_MODE=true cargox-api
 | **API** | `CARGOX_VESSELS_DB_PATH` | `api/cargox_vessels.db`| SQLite database file for AIS vessel records. |
 | **API** | `CORS_ORIGINS` | `*` | Allowed CORS origins for the API. |
 | **API** | `PORT` | `8000` | Port for Uvicorn server binding (injected automatically by Render/Railway/Cloud Run). |
-| **WEB** | `NEXT_PUBLIC_API_BASE` | `http://localhost:8000`| Base URL for the FastAPI backend. |
-| **WEB** | `NEXT_PUBLIC_CARTO_API_KEY` | *(Built-in)* | Carto dark matter basemap tile access key. |
+| **WEB** | `NEXT_PUBLIC_API_BASE` | `http://localhost:8000` | Base URL for the FastAPI backend. |
+| **WEB** | `NEXT_PUBLIC_CARTO_API_KEY` | `cb1_3tnn_1_a5741039008996c36a4ff345` | CARTO raster basemap tile access key (Dark Matter / Positron @2x). Falls back to OpenStreetMap if omitted. |
 
 ---
 

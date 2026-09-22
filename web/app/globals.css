@@ -113,12 +113,10 @@ body {
   font-family: inherit !important;
 }
 
-[data-theme="dark"] .leaflet-tile {
+/* Brightness/contrast filter only applies when using dark CARTO tiles */
+.leaflet-container[data-tile-type="carto-dark"] .leaflet-tile,
+.leaflet-tile.carto-dark-tile {
   filter: brightness(0.95) contrast(1.05);
-}
-
-[data-theme="light"] .leaflet-tile {
-  filter: brightness(1.02) contrast(1.0);
 }
 
 .leaflet-control-zoom {

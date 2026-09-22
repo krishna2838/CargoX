@@ -147,6 +147,11 @@ function MapController({
   return null;
 }
 
+const CARTO_KEY = process.env.NEXT_PUBLIC_CARTO_API_KEY || "";
+const DARK_TILE_URL = `https://basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}@2x.png?key=${CARTO_KEY}`;
+const LIGHT_TILE_URL = `https://basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}@2x.png?key=${CARTO_KEY}`;
+const OSM_TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+
 export function LiveMapInner({
   ports,
   vessels,
@@ -162,13 +167,28 @@ export function LiveMapInner({
   const [mapZoom, setMapZoom] = useState<number>(5);
   const [tilesLoaded, setTilesLoaded] = useState(false);
 
-  const apiKey = process.env.NEXT_PUBLIC_CARTO_API_KEY || "cb1_3tnn_1_a5741039008996c36a4ff345";
-  const tileUrl = useMemo(() => {
-    if (theme === "light") {
-      return `https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?api_key=${apiKey}`;
+  const { tileUrl, tileAttribution, isDarkCarto } = useMemo(() => {
+    if (!CARTO_KEY) {
+      console.warn("CARTO API key not set — falling back to OSM tiles");
+      return {
+        tileUrl: OSM_TILE_URL,
+        tileAttribution: "© OpenStreetMap contributors",
+        isDarkCarto: false,
+      };
     }
-    return `https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?api_key=${apiKey}`;
-  }, [theme, apiKey]);
+    if (theme === "light") {
+      return {
+        tileUrl: LIGHT_TILE_URL,
+        tileAttribution: '&copy; <a href="https://carto.com/">CARTO</a>',
+        isDarkCarto: false,
+      };
+    }
+    return {
+      tileUrl: DARK_TILE_URL,
+      tileAttribution: '&copy; <a href="https://carto.com/">CARTO</a>',
+      isDarkCarto: true,
+    };
+  }, [theme]);
 
   // Safety fallback so skeleton never hangs if a single tile lags
   useEffect(() => {
@@ -281,14 +301,16 @@ export function LiveMapInner({
         zoom={mapZoom}
         className="h-full w-full"
         zoomControl={true}
+        data-tile-type={isDarkCarto ? "carto-dark" : "other"}
       >
         <MapController center={mapCenter} zoom={mapZoom} />
 
-        {/* Dynamic Basemap Tiles (CartoDB Dark Matter / Positron) */}
+        {/* Dynamic Basemap Tiles (CartoDB Dark Matter / Positron / OSM Fallback) */}
         <TileLayer
-          key={theme}
+          key={`${theme}-${isDarkCarto ? "dark" : "light"}`}
           url={tileUrl}
-          attribution='&copy; <a href="https://carto.com/">CARTO</a>'
+          attribution={tileAttribution}
+          className={isDarkCarto ? "carto-dark-tile" : ""}
           maxZoom={18}
           eventHandlers={{
             load: () => setTilesLoaded(true),
