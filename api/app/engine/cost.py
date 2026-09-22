@@ -26,7 +26,11 @@ from typing import Any
 # CONFIG — all modelled coefficients in one place
 # =========================================================================
 CONFIG: dict[str, Any] = {
-    # ── Daily-hire calibration ──────────────────────────────────────────
+    # ── Voyage leg modeling ─────────────────────────────────────────────
+    # True: round-trip charter calculation (load -> discharge -> return ballast leg).
+    # Single-voyage charters require vessel repositioning to load port.
+    "includes_ballast_leg": True,
+
     # Maps Baltic sub-index value → approximate TC daily hire (USD/day).
     # Formula: daily_hire = index_value * slope + intercept
     # These are rough linear regressions fitted to 2022-2025 broker data.
@@ -133,12 +137,16 @@ def compute_cost(
     service_speed = vessel["service_speed_kn"]
     sea_days_laden = distance_nm / (service_speed * 24)
 
+    ballast_speed = vessel.get("ballast_speed_kn", service_speed)
+    ballast_days = distance_nm / (ballast_speed * 24)
+
     load_days = cfg["default_load_days"]
     disch_days = cfg["disch_days_override"].get(
         dest_port_id, cfg["default_disch_days"]
     )
     port_days = load_days + disch_days
-    total_voyage_days = sea_days_laden + port_days
+    # Round-trip charter calculation includes ballast repositioning leg
+    total_voyage_days = sea_days_laden + ballast_days + port_days
 
     # ── 2. Daily hire ───────────────────────────────────────────────────
     baltic_index = vessel["baltic_index"]
@@ -148,8 +156,11 @@ def compute_cost(
     # ── 3. Bunker cost ──────────────────────────────────────────────────
     bunker_price_usd_mt = crude_usd_bbl * cfg["VLSFO_FACTOR"]
     consumption_laden = vessel["consumption_laden_mt_per_day"]
-    # Laden sea days only (port days use much less fuel — ignore for now)
-    bunker_cost_usd = consumption_laden * sea_days_laden * bunker_price_usd_mt
+    consumption_ballast = vessel.get("consumption_ballast_mt_per_day", consumption_laden * 0.8)
+
+    laden_bunker_usd = consumption_laden * sea_days_laden * bunker_price_usd_mt
+    ballast_bunker_usd = consumption_ballast * ballast_days * bunker_price_usd_mt
+    bunker_cost_usd = laden_bunker_usd + ballast_bunker_usd
 
     # ── 4. Port charges ─────────────────────────────────────────────────
     port_charges_usd = cfg["port_charges_usd"].get(
@@ -163,8 +174,9 @@ def compute_cost(
     lighterage_usd = lighterage_per_t * cargo_tonnes
 
     # ── 6. Total freight ────────────────────────────────────────────────
+    # Round-trip calculation: hire covers full voyage duration including ballast
     hire_cost_usd = daily_hire_usd * total_voyage_days
-    freight_usd = hire_cost_usd + bunker_cost_usd + port_charges_usd + lighterage_usd
+    freight_usd = hire_cost_usd + laden_bunker_usd + ballast_bunker_usd + port_charges_usd + lighterage_usd
 
     # ── 7. Brokerage & insurance ────────────────────────────────────────
     brokerage_usd = freight_usd * cfg["brokerage_pct"]
@@ -193,9 +205,12 @@ def compute_cost(
         "voyage": {
             "distance_nm": round(distance_nm, 1),
             "service_speed_kn": service_speed,
+            "ballast_speed_kn": ballast_speed,
             "sea_days_laden": round(sea_days_laden, 2),
+            "ballast_days": round(ballast_days, 2),
             "load_days": load_days,
             "disch_days": disch_days,
+            "port_days": port_days,
             "total_voyage_days": round(total_voyage_days, 2),
         },
         "hire": {
@@ -211,8 +226,18 @@ def compute_cost(
             "vlsfo_factor": cfg["VLSFO_FACTOR"],
             "bunker_price_usd_mt": round(bunker_price_usd_mt, 2),
             "consumption_laden_mt_per_day": consumption_laden,
+            "consumption_ballast_mt_per_day": consumption_ballast,
             "sea_days_laden": round(sea_days_laden, 2),
+            "ballast_days": round(ballast_days, 2),
+            "laden_bunker_cost_usd": round(laden_bunker_usd, 2),
+            "ballast_bunker_cost_usd": round(ballast_bunker_usd, 2),
             "bunker_cost_usd": round(bunker_cost_usd, 2),
+        },
+        "ballast": {
+            "ballast_speed_kn": ballast_speed,
+            "ballast_days": round(ballast_days, 2),
+            "consumption_ballast_mt_per_day": consumption_ballast,
+            "ballast_bunker_usd": round(ballast_bunker_usd, 2),
         },
         "port": {
             "port_charges_usd": port_charges_usd,

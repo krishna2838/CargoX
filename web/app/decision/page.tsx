@@ -19,17 +19,12 @@ import {
 } from "@/components/decision/ScenarioTable";
 import {
   RiskExplanationCard,
-  RiskDriver,
 } from "@/components/decision/RiskExplanationCard";
 import { RouteRiskStrip } from "@/components/decision/RouteRiskStrip";
 import {
-  Sliders,
   ArrowLeft,
   AlertTriangle,
   RotateCcw,
-  Info,
-  Layers,
-  Sparkles,
 } from "lucide-react";
 
 interface DecisionResponse {
@@ -44,7 +39,6 @@ const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:8000";
 function DecisionContent() {
   const searchParams = useSearchParams();
   const destParam = searchParams.get("dest") || "paradip";
-  const klassParam = searchParams.get("klass") || null;
   const mmsiParam = searchParams.get("mmsi") || null;
 
   // Reference ports
@@ -154,26 +148,26 @@ function DecisionContent() {
   const riskDrivers = winningScenario?.risk?.drivers || [];
 
   return (
-    <div className="flex h-full w-full flex-col p-4 md:p-6 overflow-y-auto space-y-6">
+    <div className="flex h-full w-full flex-col p-4 md:p-6 overflow-y-auto space-y-6 bg-cx-bg">
       <div className="mx-auto max-w-6xl w-full space-y-6">
         {/* ── Breadcrumb & Top Bar ── */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-[#1f1f23] pb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-cx-border pb-4">
           <div className="flex items-center gap-3">
             <Link
               href="/"
-              className="flex items-center gap-1.5 text-xs font-mono text-zinc-400 hover:text-blue-400 transition"
+              className="flex items-center gap-1.5 text-xs font-mono text-cx-text-secondary hover:text-blue-500 transition"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               <span>LIVE MAP</span>
             </Link>
-            <span className="text-zinc-600">/</span>
-            <span className="text-xs font-mono text-zinc-300 font-semibold uppercase">
+            <span className="text-cx-border-subtle">/</span>
+            <span className="text-xs font-mono text-cx-text font-semibold uppercase">
               PROCUREMENT DECISION ENGINE
             </span>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="rounded bg-blue-950/60 border border-blue-800/60 px-2.5 py-0.5 font-mono text-[10px] text-blue-400 font-semibold">
+            <span className="rounded bg-blue-500/10 border border-blue-500/30 px-2.5 py-0.5 font-mono text-[10px] text-blue-500 font-semibold">
               MULTI-CRITERIA CHARTER MATRIX
             </span>
           </div>
@@ -181,10 +175,10 @@ function DecisionContent() {
 
         {/* ── Page Intro ── */}
         <div>
-          <h1 className="text-xl md:text-2xl font-bold tracking-tight text-[#ededed]">
+          <h1 className="text-xl md:text-2xl font-bold tracking-tight text-cx-text">
             Chartering &amp; Procurement Decision
           </h1>
-          <p className="mt-1 text-xs md:text-sm text-zinc-400">
+          <p className="mt-1 text-xs md:text-sm text-cx-text-secondary">
             Synthesizes draft limits, 28-day Baltic freight forecasting, deterministic voyage physics, and multi-factor risk into a ranked procurement recommendation.
           </p>
         </div>
@@ -202,16 +196,16 @@ function DecisionContent() {
 
         {/* ── ERROR STATE: Backend down or call failure with Retry ── */}
         {error && !loading && (
-          <div className="rounded-xl border border-rose-900/50 bg-rose-950/20 p-5 space-y-3 font-mono text-xs">
-            <div className="flex items-center gap-2 text-rose-400 font-semibold">
+          <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-5 space-y-3 font-mono text-xs">
+            <div className="flex items-center gap-2 text-rose-500 font-semibold">
               <AlertTriangle className="h-4 w-4" />
               <span>DECISION ENGINE SERVICE UNAVAILABLE</span>
             </div>
-            <p className="text-zinc-300 font-sans">{error}</p>
+            <p className="text-cx-text font-sans">{error}</p>
             <div className="pt-2">
               <button
                 onClick={() => runDecision(formValues)}
-                className="inline-flex items-center gap-2 rounded-lg bg-rose-600/30 border border-rose-500/50 px-4 py-2 font-mono text-xs font-semibold text-rose-200 hover:bg-rose-600 hover:text-white transition cursor-pointer"
+                className="inline-flex items-center gap-2 rounded-lg bg-rose-600 px-4 py-2 font-mono text-xs font-semibold text-white hover:bg-rose-500 transition cursor-pointer"
               >
                 <RotateCcw className="h-3.5 w-3.5" />
                 <span>Retry Simulation</span>
@@ -222,26 +216,26 @@ function DecisionContent() {
 
         {/* ── ZERO FEASIBLE SCENARIOS STATE ── */}
         {isAllInfeasible && (
-          <div className="rounded-xl border border-amber-900/50 bg-amber-950/20 p-5 space-y-4 font-mono text-xs">
-            <div className="flex items-center gap-2 text-amber-400 font-semibold text-sm">
+          <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-5 space-y-4 font-mono text-xs">
+            <div className="flex items-center gap-2 text-amber-500 font-semibold text-sm">
               <AlertTriangle className="h-4 w-4" />
               <span>NO VESSEL CLASS FITS THIS COMBINATION</span>
             </div>
-            <p className="text-zinc-300 font-sans">
+            <p className="text-cx-text font-sans">
               Every dry bulk vessel class encountered physical or operational constraints for this trade lane. Consider widening the laycan delivery window or selecting a deeper-draft discharge port.
             </p>
 
-            <div className="rounded-lg border border-amber-900/30 bg-[#121216] p-3 space-y-2">
-              <div className="text-zinc-400 text-[11px] font-semibold uppercase">
+            <div className="rounded-lg border border-amber-500/20 bg-cx-surface p-3 space-y-2">
+              <div className="text-cx-text-secondary text-[11px] font-semibold uppercase">
                 Observed Class Bottlenecks:
               </div>
-              <ul className="space-y-1 text-zinc-300">
+              <ul className="space-y-1 text-cx-text">
                 {scenarios.map((s) => (
                   <li key={s.vessel_class} className="flex items-start gap-2">
-                    <span className="font-semibold text-amber-400 min-w-[90px]">
+                    <span className="font-semibold text-amber-500 min-w-[90px]">
                       {s.vessel_class}:
                     </span>
-                    <span className="text-zinc-400">{s.feasibility_detail.summary}</span>
+                    <span className="text-cx-text-secondary">{s.feasibility_detail.summary}</span>
                   </li>
                 ))}
               </ul>
@@ -251,12 +245,12 @@ function DecisionContent() {
 
         {/* ── LOADING SKELETON ── */}
         {loading && (
-          <div className="rounded-xl border border-[#1f1f23] bg-[#121214] p-10 flex flex-col items-center justify-center space-y-3 font-mono text-xs text-zinc-400">
+          <div className="rounded-xl border border-cx-border bg-cx-card p-10 flex flex-col items-center justify-center space-y-3 font-mono text-xs text-cx-text-secondary">
             <div className="h-8 w-8 animate-spin rounded-full border-2 border-blue-500 border-t-transparent" />
-            <div className="font-semibold text-blue-400">
+            <div className="font-semibold text-blue-500">
               SOLVING MULTI-CRITERIA CHARTER MATRIX
             </div>
-            <p className="text-zinc-500 text-[11px] text-center max-w-md">
+            <p className="text-cx-text-muted text-[11px] text-center max-w-md">
               Evaluating port drafts, running LightGBM 28-day quantile forecasts, computing VLSFO bunker burn, and calculating composite risk scores…
             </p>
           </div>
@@ -307,7 +301,7 @@ export default function DecisionPage() {
     <AppShell>
       <Suspense
         fallback={
-          <div className="flex h-full w-full items-center justify-center font-mono text-xs text-zinc-500">
+          <div className="flex h-full w-full items-center justify-center font-mono text-xs text-cx-text-muted">
             Initializing Decision Engine…
           </div>
         }

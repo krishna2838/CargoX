@@ -30,10 +30,10 @@ export function DataTable<T>({
 }: DataTableProps<T>) {
   return (
     <div
-      className={`relative w-full overflow-x-auto rounded-lg border border-[#1f1f23] bg-[#121214] ${className}`}
+      className={`relative w-full overflow-x-auto rounded-lg border border-cx-border bg-cx-card ${className}`}
     >
       <table className="w-full text-left text-xs border-collapse">
-        <thead className="sticky top-0 z-10 border-b border-[#1f1f23] bg-[#151518] text-zinc-400">
+        <thead className="sticky top-0 z-10 border-b border-cx-border bg-cx-surface text-cx-text-secondary">
           <tr>
             {columns.map((col) => {
               const alignClass =
@@ -56,12 +56,12 @@ export function DataTable<T>({
             })}
           </tr>
         </thead>
-        <tbody className="divide-y divide-[#1f1f23] font-mono text-zinc-300">
+        <tbody className="divide-y divide-cx-border font-mono text-cx-text">
           {data.length === 0 ? (
             <tr>
               <td
                 colSpan={columns.length}
-                className="px-4 py-8 text-center text-zinc-500 font-sans text-xs"
+                className="px-4 py-8 text-center text-cx-text-muted font-sans text-xs"
               >
                 {emptyMessage}
               </td>
@@ -78,8 +78,8 @@ export function DataTable<T>({
                     onRowClick ? "cursor-pointer" : ""
                   } ${
                     isSelected
-                      ? "bg-blue-950/30 text-blue-200 border-l-2 border-l-blue-500"
-                      : "hover:bg-[#18181b]"
+                      ? "bg-blue-500/10 text-blue-600 dark:text-blue-300 border-l-2 border-l-blue-500"
+                      : "hover:bg-cx-hover"
                   }`}
                 >
                   {columns.map((col) => {

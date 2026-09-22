@@ -156,8 +156,8 @@ export default function Home() {
 
   return (
     <AppShell>
-      <div className="relative h-full w-full overflow-hidden bg-[#0a0a0a]">
-        {/* Full-Height Leaflet Dark Map */}
+      <div className="relative h-full w-full overflow-hidden bg-cx-bg">
+        {/* Full-Height Leaflet Map */}
         <LiveMap
           ports={ports}
           vessels={vessels}
@@ -167,16 +167,16 @@ export default function Home() {
         />
 
         {/* Floating Metrics Badge (Top Right) */}
-        <div className="absolute top-3 right-3 z-30 hidden sm:flex items-center gap-2 rounded-lg border border-[#1f1f23] bg-[#0d0d0f]/90 px-3 py-1.5 backdrop-blur-md shadow-xl font-mono text-xs">
+        <div className="absolute top-3 right-3 z-30 hidden sm:flex items-center gap-2 rounded-lg border border-cx-border bg-cx-surface/90 px-3 py-1.5 backdrop-blur-md shadow-xl font-mono text-xs">
           <div className="flex items-center gap-1.5">
             <span className="h-2 w-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
-            <span className="text-zinc-400">PORTS:</span>
-            <span className="font-semibold text-[#ededed]">{ports.length}</span>
+            <span className="text-cx-text-secondary">PORTS:</span>
+            <span className="font-semibold text-cx-text">{ports.length}</span>
           </div>
-          <span className="text-zinc-700">|</span>
+          <span className="text-cx-border">|</span>
           <div className="flex items-center gap-1.5">
-            <span className="text-zinc-400">LIVE AIS:</span>
-            <span className="font-semibold text-emerald-400">
+            <span className="text-cx-text-secondary">LIVE AIS:</span>
+            <span className="font-semibold text-emerald-500 dark:text-emerald-400">
               {vessels.length > 0 ? vessels.length : "SYNCING"}
             </span>
           </div>

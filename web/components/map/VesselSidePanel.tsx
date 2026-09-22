@@ -99,16 +99,16 @@ export function VesselSidePanel({ vessel, onClose }: VesselSidePanelProps) {
       badge={
         <div className="flex items-center gap-1.5">
           {isSeeded && (
-            <span className="rounded border border-amber-500/30 bg-amber-500/10 px-1.5 py-0.5 font-mono text-[9px] font-semibold text-amber-400 tracking-wider">
+            <span className="rounded border border-amber-500/30 bg-amber-500/10 px-1.5 py-0.5 font-mono text-[9px] font-semibold text-amber-500 tracking-wider">
               SEEDED
             </span>
           )}
           {currentVessel.inferred_class ? (
-            <span className="rounded-full border border-blue-500/40 bg-blue-950/40 px-2 py-0.5 font-mono text-[10px] text-blue-400 font-semibold tracking-wider uppercase">
+            <span className="rounded-full border border-blue-500/40 bg-blue-500/10 px-2 py-0.5 font-mono text-[10px] text-blue-500 font-semibold tracking-wider uppercase">
               {currentVessel.inferred_class}
             </span>
           ) : (
-            <span className="rounded-full border border-zinc-700 bg-zinc-800 px-2 py-0.5 font-mono text-[10px] text-zinc-400">
+            <span className="rounded-full border border-cx-border bg-cx-hover px-2 py-0.5 font-mono text-[10px] text-cx-text-secondary">
               CARGO
             </span>
           )}
@@ -123,7 +123,7 @@ export function VesselSidePanel({ vessel, onClose }: VesselSidePanelProps) {
             <Sliders className="h-4 w-4" />
             <span>Evaluate in Decision Engine</span>
           </Link>
-          <p className="text-center font-mono text-[10px] text-zinc-500">
+          <p className="text-center font-mono text-[10px] text-cx-text-muted">
             Prefills {klass} class & vessel telemetry into procurement matrix
           </p>
         </div>
@@ -131,24 +131,24 @@ export function VesselSidePanel({ vessel, onClose }: VesselSidePanelProps) {
     >
       {/* ── Telemetry Grid ── */}
       <div className="grid grid-cols-2 gap-2.5">
-        <div className="rounded-lg border border-[#1f1f23] bg-[#161619] p-3">
-          <div className="flex items-center gap-1.5 text-zinc-400 text-xs">
-            <Gauge className="h-3.5 w-3.5 text-blue-400" />
+        <div className="rounded-lg border border-cx-border bg-cx-surface p-3">
+          <div className="flex items-center gap-1.5 text-cx-text-secondary text-xs">
+            <Gauge className="h-3.5 w-3.5 text-blue-500" />
             <span>Speed Over Ground</span>
           </div>
-          <div className="mt-1 font-mono text-lg font-semibold text-[#ededed]">
+          <div className="mt-1 font-mono text-lg font-semibold text-cx-text">
             {currentVessel.speed !== null && currentVessel.speed !== undefined
               ? `${Number(currentVessel.speed).toFixed(1)} kn`
               : "--"}
           </div>
         </div>
 
-        <div className="rounded-lg border border-[#1f1f23] bg-[#161619] p-3">
-          <div className="flex items-center gap-1.5 text-zinc-400 text-xs">
-            <Navigation className="h-3.5 w-3.5 text-cyan-400" />
+        <div className="rounded-lg border border-cx-border bg-cx-surface p-3">
+          <div className="flex items-center gap-1.5 text-cx-text-secondary text-xs">
+            <Navigation className="h-3.5 w-3.5 text-cyan-500" />
             <span>Course / Heading</span>
           </div>
-          <div className="mt-1 font-mono text-lg font-semibold text-[#ededed]">
+          <div className="mt-1 font-mono text-lg font-semibold text-cx-text">
             {currentVessel.heading !== null && currentVessel.heading !== undefined
               ? `${Math.round(currentVessel.heading)}°`
               : currentVessel.course !== null && currentVessel.course !== undefined
@@ -159,20 +159,20 @@ export function VesselSidePanel({ vessel, onClose }: VesselSidePanelProps) {
       </div>
 
       {/* ── Voyage & Destination Card ── */}
-      <div className="rounded-lg border border-[#1f1f23] bg-[#161619] p-3.5 space-y-3">
+      <div className="rounded-lg border border-cx-border bg-cx-surface p-3.5 space-y-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-xs font-semibold text-zinc-300">
-            <Anchor className="h-4 w-4 text-emerald-400" />
+          <div className="flex items-center gap-2 text-xs font-semibold text-cx-text">
+            <Anchor className="h-4 w-4 text-emerald-500" />
             <span>Reported Destination</span>
           </div>
-          <span className="font-mono text-[11px] text-zinc-400">AIS ETA</span>
+          <span className="font-mono text-[11px] text-cx-text-secondary">AIS ETA</span>
         </div>
 
-        <div className="flex items-baseline justify-between gap-2 border-t border-[#222227] pt-2">
-          <div className="font-mono text-sm font-semibold text-[#ededed] uppercase tracking-wide">
+        <div className="flex items-baseline justify-between gap-2 border-t border-cx-border-subtle pt-2">
+          <div className="font-mono text-sm font-semibold text-cx-text uppercase tracking-wide">
             {currentVessel.destination || "Destination not reported"}
           </div>
-          <div className="font-mono text-xs text-zinc-300">
+          <div className="font-mono text-xs text-cx-text-secondary">
             {currentVessel.eta
               ? new Date(currentVessel.eta).toLocaleDateString("en-IN", {
                   month: "short",
@@ -184,39 +184,39 @@ export function VesselSidePanel({ vessel, onClose }: VesselSidePanelProps) {
           </div>
         </div>
 
-        <div className="font-mono text-[11px] text-zinc-400">
+        <div className="font-mono text-[11px] text-cx-text-secondary">
           Position:{" "}
-          <span className="text-zinc-300">
+          <span className="text-cx-text font-medium">
             {currentVessel.latitude?.toFixed(4)}°, {currentVessel.longitude?.toFixed(4)}°
           </span>
         </div>
       </div>
 
       {/* ── Vessel Physical Dimensions ── */}
-      <div className="rounded-lg border border-[#1f1f23] bg-[#161619] p-3.5 space-y-2.5">
+      <div className="rounded-lg border border-cx-border bg-cx-surface p-3.5 space-y-2.5">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-medium uppercase tracking-wider text-zinc-400">
+          <span className="text-xs font-medium uppercase tracking-wider text-cx-text-secondary">
             Physical Dimensions
           </span>
-          <Maximize2 className="h-3.5 w-3.5 text-zinc-500" />
+          <Maximize2 className="h-3.5 w-3.5 text-cx-text-muted" />
         </div>
 
         <div className="grid grid-cols-3 gap-2 font-mono text-center pt-1">
-          <div className="rounded bg-[#121214] p-2 border border-[#1f1f23]">
-            <div className="text-[10px] text-zinc-500">LENGTH (LOA)</div>
-            <div className="mt-0.5 text-sm font-semibold text-[#ededed]">
+          <div className="rounded bg-cx-card p-2 border border-cx-border">
+            <div className="text-[10px] text-cx-text-muted">LENGTH (LOA)</div>
+            <div className="mt-0.5 text-sm font-semibold text-cx-text">
               {currentVessel.loa ? `${Math.round(currentVessel.loa)} m` : "--"}
             </div>
           </div>
-          <div className="rounded bg-[#121214] p-2 border border-[#1f1f23]">
-            <div className="text-[10px] text-zinc-500">BEAM</div>
-            <div className="mt-0.5 text-sm font-semibold text-[#ededed]">
+          <div className="rounded bg-cx-card p-2 border border-cx-border">
+            <div className="text-[10px] text-cx-text-muted">BEAM</div>
+            <div className="mt-0.5 text-sm font-semibold text-cx-text">
               {currentVessel.beam ? `${Math.round(currentVessel.beam)} m` : "--"}
             </div>
           </div>
-          <div className="rounded bg-[#121214] p-2 border border-[#1f1f23]">
-            <div className="text-[10px] text-zinc-500">MAX DRAFT</div>
-            <div className="mt-0.5 text-sm font-semibold text-[#ededed]">
+          <div className="rounded bg-cx-card p-2 border border-cx-border">
+            <div className="text-[10px] text-cx-text-muted">MAX DRAFT</div>
+            <div className="mt-0.5 text-sm font-semibold text-cx-text">
               {currentVessel.draft ? `${Number(currentVessel.draft).toFixed(1)} m` : "--"}
             </div>
           </div>
@@ -225,40 +225,40 @@ export function VesselSidePanel({ vessel, onClose }: VesselSidePanelProps) {
 
       {/* ── Matched Dry Bulk Class Benchmark (vessel_classes.json) ── */}
       {matchedClass && (
-        <div className="rounded-lg border border-blue-900/30 bg-blue-950/20 p-3.5 space-y-2.5">
+        <div className="rounded-lg border border-blue-500/30 bg-blue-500/5 p-3.5 space-y-2.5">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-blue-300">
+            <span className="text-xs font-semibold text-blue-500">
               {matchedClass.class} Class Specs
             </span>
-            <span className="font-mono text-[10px] text-blue-400 bg-blue-900/40 px-1.5 py-0.5 rounded">
+            <span className="font-mono text-[10px] text-blue-500 bg-blue-500/10 px-1.5 py-0.5 rounded border border-blue-500/20">
               Index: {matchedClass.baltic_index}
             </span>
           </div>
 
-          <div className="grid grid-cols-2 gap-2 text-xs font-mono text-zinc-300">
+          <div className="grid grid-cols-2 gap-2 text-xs font-mono text-cx-text">
             <div>
-              <span className="text-zinc-500">DWT Range: </span>
+              <span className="text-cx-text-muted">DWT Range: </span>
               <span>
                 {(matchedClass.dwt_min / 1000).toFixed(0)}k–
                 {(matchedClass.dwt_max / 1000).toFixed(0)}k t
               </span>
             </div>
             <div>
-              <span className="text-zinc-500">Service Speed: </span>
+              <span className="text-cx-text-muted">Service Speed: </span>
               <span>{matchedClass.service_speed_kn} kn</span>
             </div>
             <div>
-              <span className="text-zinc-500">Laden Burn: </span>
+              <span className="text-cx-text-muted">Laden Burn: </span>
               <span>{matchedClass.consumption_laden_mt_per_day} mt/d</span>
             </div>
             <div>
-              <span className="text-zinc-500">Ballast Burn: </span>
+              <span className="text-cx-text-muted">Ballast Burn: </span>
               <span>{matchedClass.consumption_ballast_mt_per_day} mt/d</span>
             </div>
           </div>
 
           {matchedClass.notes && (
-            <p className="text-[11px] text-zinc-400 border-t border-blue-900/30 pt-2 italic">
+            <p className="text-[11px] text-cx-text-secondary border-t border-blue-500/20 pt-2 italic">
               {matchedClass.notes}
             </p>
           )}
@@ -267,7 +267,7 @@ export function VesselSidePanel({ vessel, onClose }: VesselSidePanelProps) {
 
       {/* Timestamp */}
       {currentVessel.last_seen && (
-        <div className="flex items-center justify-between text-[10px] font-mono text-zinc-500 pt-1">
+        <div className="flex items-center justify-between text-[10px] font-mono text-cx-text-muted pt-1">
           <span>Last AIS Signal:</span>
           <span>{new Date(currentVessel.last_seen).toISOString()}</span>
         </div>

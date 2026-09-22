@@ -139,17 +139,16 @@ async def get_route_weather(
     # Waypoint 1: Origin / Loading port
     wp1 = (load_port.get("name", "Origin Port"), "Origin", load_lat, load_lng, False)
 
-    # Waypoint 2: Mid-ocean corridor (Equatorial Indian Ocean / Sunda Strait)
-    mid_lat = (load_lat + dest_lat) / 2.0
-    mid_lng = (load_lng + dest_lng) / 2.0
-    # Adjust realistic sea-lane waypoint south of Sumatra if route from Australia
-    if load_lng > 110:
-        mid_lat = -6.5
-        mid_lng = 98.5
-    wp2 = ("Equatorial Indian Ocean", "Mid-Ocean", mid_lat, mid_lng, False)
+    # Waypoint 2: Mid-ocean corridor (Equatorial Indian Ocean)
+    eq_lat = 0.0
+    eq_lng = 88.0 if load_lng > 110 else (load_lng + dest_lng) / 2.0
+    wp2 = ("Equatorial Indian Ocean", "Mid-Ocean", eq_lat, eq_lng, False)
 
-    # Waypoint 3: Central Bay of Bengal
-    wp3 = ("Bay of Bengal Central", "Bay of Bengal", 13.0, 86.5, True)
+    # Waypoint 3: Bay of Bengal (midpoint between Equatorial waypoint and destination port)
+    bob_lat = (eq_lat + dest_lat) / 2.0
+    bob_lat = max(10.0, min(18.0, bob_lat))  # Clamp latitude to 10-18°N (valid Bay of Bengal range)
+    bob_lng = (eq_lng + dest_lng) / 2.0
+    wp3 = ("Bay of Bengal", "Bay of Bengal", bob_lat, bob_lng, True)
 
     # Waypoint 4: Destination discharge roadstead
     wp4 = (dest_port.get("name", "Destination Port"), "Destination", dest_lat, dest_lng, True)

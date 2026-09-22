@@ -5,7 +5,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { StatCard } from "@/components/ui/StatCard";
 import { CommoditiesStrip } from "@/components/freight/CommoditiesStrip";
 import { ForecastChart } from "@/components/freight/ForecastChart";
-import { TrendingUp, RefreshCw, BarChart3, Clock } from "lucide-react";
+import { RefreshCw, BarChart3, Clock } from "lucide-react";
 
 interface BalticMetric {
   current: number;
@@ -36,7 +36,6 @@ const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:8000";
 
 export default function FreightPage() {
   const [freightData, setFreightData] = useState<FreightLatestResponse | null>(null);
-  const [loading, setLoading] = useState(true);
   const [lastRefreshed, setLastRefreshed] = useState<Date>(new Date());
 
   async function fetchFreight() {
@@ -49,8 +48,6 @@ export default function FreightPage() {
       }
     } catch (err) {
       console.error("Failed to load /freight/latest", err);
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -67,7 +64,7 @@ export default function FreightPage() {
       id: "BDI",
       title: "BALTIC DRY (BDI)",
       badge: (
-        <span className="rounded bg-blue-950/50 border border-blue-800/50 px-1.5 py-0.2 font-mono text-[9px] text-blue-400 font-semibold">
+        <span className="rounded bg-blue-500/10 border border-blue-500/30 px-1.5 py-0.2 font-mono text-[9px] text-blue-500 font-semibold">
           COMPOSITE
         </span>
       ),
@@ -80,7 +77,7 @@ export default function FreightPage() {
       id: "BCI",
       title: "CAPESIZE (BCI)",
       badge: (
-        <span className="rounded bg-purple-950/50 border border-purple-800/50 px-1.5 py-0.2 font-mono text-[9px] text-purple-400 font-semibold">
+        <span className="rounded bg-purple-500/10 border border-purple-500/30 px-1.5 py-0.2 font-mono text-[9px] text-purple-500 font-semibold">
           &ge;260M
         </span>
       ),
@@ -93,7 +90,7 @@ export default function FreightPage() {
       id: "BPI",
       title: "PANAMAX (BPI)",
       badge: (
-        <span className="rounded bg-sky-950/50 border border-sky-800/50 px-1.5 py-0.2 font-mono text-[9px] text-sky-400 font-semibold">
+        <span className="rounded bg-sky-500/10 border border-sky-500/30 px-1.5 py-0.2 font-mono text-[9px] text-sky-500 font-semibold">
           215-260M
         </span>
       ),
@@ -106,7 +103,7 @@ export default function FreightPage() {
       id: "BSI",
       title: "SUPRAMAX (BSI)",
       badge: (
-        <span className="rounded bg-cyan-950/50 border border-cyan-800/50 px-1.5 py-0.2 font-mono text-[9px] text-cyan-400 font-semibold">
+        <span className="rounded bg-cyan-500/10 border border-cyan-500/30 px-1.5 py-0.2 font-mono text-[9px] text-cyan-500 font-semibold">
           170-215M
         </span>
       ),
@@ -115,48 +112,61 @@ export default function FreightPage() {
       metric: metrics?.BSI,
       sparklineColor: "#06b6d4",
     },
+    {
+      id: "BHSI",
+      title: "HANDYSIZE (BHSI)",
+      badge: (
+        <span className="rounded bg-emerald-500/10 border border-emerald-500/30 px-1.5 py-0.2 font-mono text-[9px] text-emerald-500 font-semibold">
+          &lt;170M
+        </span>
+      ),
+      value: freightData?.BHSI ? freightData.BHSI.toLocaleString() : "--",
+      unit: "pts",
+      metric: metrics?.BHSI,
+      sparklineColor: "#10b981",
+    },
   ];
 
   return (
     <AppShell>
-      <div className="flex h-full w-full flex-col p-4 md:p-6 overflow-y-auto space-y-5">
+      <div className="flex h-full w-full flex-col p-4 md:p-6 overflow-y-auto space-y-5 bg-cx-bg">
         <div className="mx-auto max-w-6xl w-full space-y-5">
           {/* ── Page Header ── */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-[#1f1f23] pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-cx-border pb-4">
             <div>
               <div className="flex items-center gap-2.5">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-950/50 border border-blue-800/50 text-blue-400">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-500">
                   <BarChart3 className="h-4 w-4" />
                 </div>
-                <h1 className="text-xl md:text-2xl font-bold tracking-tight text-[#ededed]">
+                <h1 className="text-xl md:text-2xl font-bold tracking-tight text-cx-text">
                   Freight Rate Intelligence
                 </h1>
-                <span className="rounded bg-blue-950/40 border border-blue-800/40 px-2 py-0.5 font-mono text-[10px] text-blue-400">
+                <span className="rounded bg-blue-500/10 border border-blue-500/30 px-2 py-0.5 font-mono text-[10px] text-blue-500">
                   BALTIC EXCHANGE &middot; DAILY
                 </span>
               </div>
-              <p className="mt-1 text-xs md:text-sm text-zinc-400">
+              <p className="mt-1 text-xs md:text-sm text-cx-text-secondary">
                 Official dry bulk spot indices, multi-horizon quantile forecasting, and input commodity cost feeds.
               </p>
             </div>
 
-            <div className="flex items-center gap-3 font-mono text-xs text-zinc-500">
+            <div className="flex items-center gap-3 font-mono text-xs text-cx-text-muted">
               <div className="flex items-center gap-1.5">
-                <Clock className="h-3.5 w-3.5 text-zinc-400" />
+                <Clock className="h-3.5 w-3.5 text-cx-text-secondary" />
                 <span>As of {freightData?.date ? freightData.date.split("T")[0] : "Today"}</span>
               </div>
               <button
                 onClick={() => fetchFreight()}
                 title="Refresh latest rates"
-                className="rounded p-1 text-zinc-400 hover:bg-[#18181c] hover:text-[#ededed] transition"
+                className="rounded p-1 text-cx-text-secondary hover:bg-cx-hover hover:text-cx-text transition"
               >
                 <RefreshCw className="h-3.5 w-3.5" />
               </button>
             </div>
           </div>
 
-          {/* ── Section 1: Header Stat Row (BDI, BCI, BPI, BSI) ── */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+          {/* ── Section 1: Header Stat Row (BDI, BCI, BPI, BSI, BHSI) ── */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3.5">
             {statCards.map((card) => {
               const m = card.metric;
               const hasChange7d = m?.change_7d !== undefined;

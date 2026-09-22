@@ -10,8 +10,10 @@ import {
   Layers,
   Ship,
   Radio,
-  ExternalLink,
+  Sun,
+  Moon,
 } from "lucide-react";
+import { useTheme } from "../providers/ThemeProvider";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -21,6 +23,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:8000";
 
 export function AppShell({ children }: AppShellProps) {
   const pathname = usePathname();
+  const { theme, toggleTheme } = useTheme();
   const [apiOnline, setApiOnline] = useState<boolean | null>(null);
   const [vesselCount, setVesselCount] = useState<number | null>(null);
   const [fleetSource, setFleetSource] = useState<"live" | "seeded" | "empty" | null>(null);
@@ -103,14 +106,14 @@ export function AppShell({ children }: AppShellProps) {
   ];
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[#0a0a0a] text-[#ededed]">
+    <div className="flex h-screen w-screen overflow-hidden bg-cx-bg text-cx-text">
       {/* ── Desktop Left Sidebar (64px icon rail) ── */}
-      <aside className="hidden md:flex flex-col items-center justify-between border-r border-[#1f1f23] bg-[#0d0d0f] py-4 w-16 shrink-0 z-30">
+      <aside className="hidden md:flex flex-col items-center justify-between border-r border-cx-border bg-cx-surface py-4 w-16 shrink-0 z-30 transition-colors duration-150">
         <div className="flex flex-col items-center gap-6">
           {/* Logo Mark */}
           <Link
             href="/"
-            className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600/10 border border-blue-500/30 text-blue-400 transition hover:bg-blue-600/20"
+            className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600/10 border border-blue-500/30 text-blue-500 transition hover:bg-blue-600/20"
             title="CargoX"
           >
             <Ship className="h-5 w-5" />
@@ -128,8 +131,8 @@ export function AppShell({ children }: AppShellProps) {
                   title={`${item.label} — ${item.description}`}
                   className={`group relative flex h-10 w-10 items-center justify-center rounded-lg transition-all duration-150 ${
                     isActive
-                      ? "bg-blue-600/20 text-blue-400 border border-blue-500/40 shadow-[0_0_12px_rgba(59,130,246,0.25)]"
-                      : "text-zinc-400 hover:bg-[#18181b] hover:text-[#ededed]"
+                      ? "bg-blue-600/15 text-blue-500 border border-blue-500/40 shadow-xs"
+                      : "text-cx-text-secondary hover:bg-cx-hover hover:text-cx-text"
                   }`}
                 >
                   <Icon className="h-5 w-5" />
@@ -138,7 +141,7 @@ export function AppShell({ children }: AppShellProps) {
                     <span className="absolute -left-2 h-5 w-1 rounded-r-full bg-blue-500" />
                   )}
                   {/* Tooltip */}
-                  <span className="pointer-events-none absolute left-14 z-50 whitespace-nowrap rounded bg-[#18181b] border border-[#27272a] px-2.5 py-1 text-xs font-medium text-[#ededed] shadow-lg opacity-0 transition-opacity group-hover:opacity-100">
+                  <span className="pointer-events-none absolute left-14 z-50 whitespace-nowrap rounded bg-cx-surface border border-cx-border-subtle px-2.5 py-1 text-xs font-medium text-cx-text shadow-lg opacity-0 transition-opacity group-hover:opacity-100">
                     {item.label}
                   </span>
                 </Link>
@@ -152,14 +155,14 @@ export function AppShell({ children }: AppShellProps) {
           className="flex flex-col items-center gap-1.5"
           title={fleetSource === "seeded" ? "Seeded fleet active (DEMO_MODE=true)" : "AISStream WebSocket live ingestion"}
         >
-          <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-blue-950/40 border border-blue-900/40 text-blue-400">
+          <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-500">
             <Radio className="h-4 w-4" />
             <span className="absolute -top-0.5 -right-0.5 flex h-2 w-2">
               <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${fleetSource === "seeded" ? "bg-amber-400" : "bg-emerald-400"}`} />
               <span className={`relative inline-flex rounded-full h-2 w-2 ${fleetSource === "seeded" ? "bg-amber-500" : "bg-emerald-500"}`} />
             </span>
           </div>
-          <span className="text-[9px] font-mono text-zinc-500 uppercase tracking-tighter">
+          <span className="text-[9px] font-mono text-cx-text-muted uppercase tracking-tighter">
             {fleetSource === "seeded" ? "SEEDED" : "AIS LIVE"}
           </span>
         </div>
@@ -168,63 +171,63 @@ export function AppShell({ children }: AppShellProps) {
       {/* ── Main App Column ── */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Top Header Bar */}
-        <header className="flex h-14 shrink-0 items-center justify-between border-b border-[#1f1f23] bg-[#0f0f12] px-4 md:px-6 z-20">
+        <header className="flex h-14 shrink-0 items-center justify-between border-b border-cx-border bg-cx-surface px-4 md:px-6 z-20 transition-colors duration-150">
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center gap-1.5">
-              <span className="text-lg font-bold tracking-tight text-[#ededed]">
+              <span className="text-lg font-bold tracking-tight text-cx-text">
                 Cargo<span className="text-blue-500">X</span>
               </span>
-              <span className="hidden sm:inline-block rounded bg-[#1f1f23] px-1.5 py-0.5 font-mono text-[10px] text-zinc-400 tracking-wider">
+              <span className="hidden sm:inline-block rounded bg-cx-hover border border-cx-border px-1.5 py-0.5 font-mono text-[10px] text-cx-text-muted tracking-wider">
                 TERMINAL v0.1
               </span>
             </Link>
 
-            <span className="hidden lg:inline-block text-zinc-600">|</span>
-            <span className="hidden lg:inline-block text-xs text-zinc-400">
+            <span className="hidden lg:inline-block text-cx-border-subtle">|</span>
+            <span className="hidden lg:inline-block text-xs text-cx-text-secondary">
               Procurement decisions for Indian bulk importers
             </span>
           </div>
 
-          {/* Market & System Telemetry Tickers */}
-          <div className="flex items-center gap-3 md:gap-5">
+          {/* Market & System Telemetry Tickers + Theme Toggle */}
+          <div className="flex items-center gap-3 md:gap-4">
             {/* BDI Metric */}
             {bdiQuote && (
               <div className="hidden sm:flex items-center gap-1.5 font-mono text-xs">
-                <span className="text-zinc-500">BDI:</span>
-                <span className="font-semibold text-blue-400">
+                <span className="text-cx-text-muted">BDI:</span>
+                <span className="font-semibold text-blue-500">
                   {bdiQuote.bdi.toLocaleString()}
                 </span>
               </div>
             )}
 
             {/* Live Vessels Tracked */}
-            <div className="flex items-center gap-1.5 font-mono text-xs text-zinc-300">
-              <span className="text-zinc-500">FLEET:</span>
-              <span className="text-[#ededed]">
+            <div className="flex items-center gap-1.5 font-mono text-xs text-cx-text-secondary">
+              <span className="text-cx-text-muted">FLEET:</span>
+              <span className="text-cx-text font-medium">
                 {vesselCount !== null ? vesselCount : "..."}
               </span>
-              <span className="hidden sm:inline text-zinc-500 text-[11px]">
+              <span className="hidden sm:inline text-cx-text-muted text-[11px]">
                 ships
               </span>
               {fleetSource === "seeded" && (
-                <span className="rounded border border-amber-500/30 bg-amber-500/10 px-1.5 py-0.5 font-mono text-[9px] font-semibold text-amber-400 tracking-wider">
+                <span className="rounded border border-amber-500/30 bg-amber-500/10 px-1.5 py-0.5 font-mono text-[9px] font-semibold text-amber-500 tracking-wider">
                   seeded
                 </span>
               )}
             </div>
 
             {/* API Status Indicator */}
-            <div className="flex items-center gap-1.5 rounded-full border border-[#1f1f23] bg-[#141416] px-2.5 py-1 text-xs">
+            <div className="flex items-center gap-1.5 rounded-full border border-cx-border bg-cx-hover px-2.5 py-1 text-xs">
               <span
                 className={`h-2 w-2 rounded-full ${
                   apiOnline === null
-                    ? "bg-zinc-500 animate-pulse"
+                    ? "bg-zinc-400 animate-pulse"
                     : apiOnline
                       ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.7)]"
                       : "bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.7)]"
                 }`}
               />
-              <span className="font-mono text-[11px] text-zinc-400">
+              <span className="font-mono text-[11px] text-cx-text-secondary">
                 {apiOnline === null
                   ? "SYNC"
                   : apiOnline
@@ -232,14 +235,28 @@ export function AppShell({ children }: AppShellProps) {
                     : "API OFFLINE"}
               </span>
             </div>
+
+            {/* Theme Toggle Button */}
+            <button
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+              title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+              className="flex h-8 w-8 items-center justify-center rounded-lg border border-cx-border bg-cx-surface text-cx-text-secondary hover:bg-cx-hover hover:text-cx-text transition-colors"
+            >
+              {theme === "dark" ? (
+                <Sun className="h-4 w-4 text-amber-400 transition-transform hover:rotate-45" />
+              ) : (
+                <Moon className="h-4 w-4 text-cx-text-secondary transition-transform hover:-rotate-12" />
+              )}
+            </button>
           </div>
         </header>
 
         {/* Viewport Content */}
-        <main className="relative flex-1 overflow-hidden">{children}</main>
+        <main className="relative flex-1 overflow-hidden bg-cx-bg">{children}</main>
 
         {/* ── Mobile Bottom Navigation Bar (below 768px) ── */}
-        <nav className="flex md:hidden h-14 items-center justify-around border-t border-[#1f1f23] bg-[#0d0d0f] px-2 z-40">
+        <nav className="flex md:hidden h-14 items-center justify-around border-t border-cx-border bg-cx-surface px-2 z-40">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
@@ -248,7 +265,7 @@ export function AppShell({ children }: AppShellProps) {
                 key={item.href}
                 href={item.href}
                 className={`flex flex-col items-center justify-center py-1 px-3 text-[10px] font-medium transition ${
-                  isActive ? "text-blue-400" : "text-zinc-400 hover:text-[#ededed]"
+                  isActive ? "text-blue-500" : "text-cx-text-secondary hover:text-cx-text"
                 }`}
               >
                 <Icon className="h-5 w-5 mb-0.5" />

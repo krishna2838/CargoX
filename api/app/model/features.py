@@ -90,7 +90,7 @@ def build_merged_dataset(data_dir: Path | None = None) -> pd.DataFrame:
     """
     bdi, ps, fx = load_raw_datasets(data_dir)
 
-    # Exogenous features are lagged by one period to prevent look-ahead bias
+    # Lagged 1 period to prevent look-ahead bias
     ps_lagged = ps.copy()
     numeric_ps_cols = [c for c in ps_lagged.columns if c != "date"]
     ps_lagged[numeric_ps_cols] = ps_lagged[numeric_ps_cols].shift(1)

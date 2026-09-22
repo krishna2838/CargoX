@@ -253,13 +253,15 @@ async def vessel_profile(mmsi: int):
 # ── Debug: full cost breakdown ────────────────────────────────────────────
 
 @app.get("/debug/cost")
+@app.get("/engine/cost")
 async def debug_cost(
     tonnes: float = Query(..., description="Cargo size in metric tonnes"),
     load: str = Query(..., description="Load port ID (e.g. port_hedland)"),
     dest: str = Query(..., description="Destination port ID (e.g. paradip)"),
     klass: str = Query(..., description="Vessel class name (e.g. Panamax)"),
+    commodity: str = Query("coking_coal", description="Bulk commodity (coking_coal, iron_ore, thermal_coal)"),
 ):
-    """Temporary debug endpoint — returns a full landed-cost breakdown."""
+    """Landed-cost engine endpoint — returns a full landed-cost and voyage breakdown."""
 
     # ── Resolve inputs ───────────────────────────────────────────────────
     load_port = get_load_port_by_id(load)
@@ -287,10 +289,19 @@ async def debug_cost(
 
     baltic_index = vessel["baltic_index"]
     index_value = bdi.get(baltic_index, 1000)  # fallback
-    crude_usd_bbl = pinksheet.get("crude_avg_usd_bbl", 75.0)
-    usd_inr = fx.get("usd_inr", 83.0)
-    # Default to iron ore for demo; a real endpoint would accept commodity param
-    commodity_usd = pinksheet.get("iron_ore_usd_dmt", 100.0)
+    crude_usd_bbl = float(pinksheet.get("crude_avg_usd_bbl", 75.0))
+    usd_inr = float(fx.get("usd_inr", 83.0))
+
+    # Resolve commodity price based on requested bulk commodity
+    comm_lower = commodity.lower()
+    if comm_lower in ["iron_ore", "ironore", "ore"]:
+        commodity_usd = float(pinksheet.get("iron_ore_usd_dmt", 105.0))
+    elif comm_lower in ["coking_coal", "met_coal", "coal_au"]:
+        commodity_usd = float(pinksheet.get("coal_au_usd_mt", 185.0))
+    elif comm_lower in ["thermal_coal", "coal_sa", "coal"]:
+        commodity_usd = float(pinksheet.get("coal_sa_usd_mt", 138.0))
+    else:
+        commodity_usd = float(pinksheet.get("iron_ore_usd_dmt", 105.0))
 
     # ── Cost breakdown ───────────────────────────────────────────────────
     breakdown = compute_cost(

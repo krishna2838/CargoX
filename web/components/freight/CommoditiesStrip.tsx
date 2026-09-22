@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Flame, Droplets, Gem, DollarSign, RefreshCw } from "lucide-react";
+import { Flame, Droplets, Gem, DollarSign } from "lucide-react";
 
 interface CommoditiesData {
   date?: string;
@@ -66,7 +66,7 @@ export function CommoditiesStrip() {
         : "--",
       unit: "/ dmt",
       icon: Gem,
-      iconColor: "text-amber-400",
+      iconColor: "text-amber-500",
     },
     {
       id: "coal_au",
@@ -77,7 +77,7 @@ export function CommoditiesStrip() {
         : "--",
       unit: "/ mt",
       icon: Flame,
-      iconColor: "text-orange-400",
+      iconColor: "text-orange-500",
     },
     {
       id: "coal_sa",
@@ -88,7 +88,7 @@ export function CommoditiesStrip() {
         : "--",
       unit: "/ mt",
       icon: Flame,
-      iconColor: "text-rose-400",
+      iconColor: "text-rose-500",
     },
     {
       id: "crude",
@@ -99,29 +99,29 @@ export function CommoditiesStrip() {
         : "--",
       unit: "/ bbl",
       icon: Droplets,
-      iconColor: "text-cyan-400",
+      iconColor: "text-cyan-500",
     },
     {
       id: "usdinr",
       label: "USD / INR FX",
-      sub: "RBI Reference Spot",
+      sub: "ECB / RBI Reference",
       value: fx?.usd_inr ? `₹${fx.usd_inr.toFixed(2)}` : "--",
       unit: "/ USD",
       icon: DollarSign,
-      iconColor: "text-emerald-400",
+      iconColor: "text-emerald-500",
     },
   ];
 
   return (
-    <div className="w-full rounded-xl border border-[#1f1f23] bg-[#121214] p-3 shadow-md">
+    <div className="w-full rounded-xl border border-cx-border bg-cx-card p-3 shadow-md">
       <div className="mb-2 flex items-center justify-between px-1">
         <div className="flex items-center gap-2">
           <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
-          <span className="font-mono text-[10px] font-semibold tracking-wider text-zinc-400 uppercase">
+          <span className="font-mono text-[10px] font-semibold tracking-wider text-cx-text-secondary uppercase">
             GLOBAL COMMODITIES &amp; FX BENCHMARKS
           </span>
         </div>
-        <span className="font-mono text-[10px] text-zinc-500">
+        <span className="font-mono text-[10px] text-cx-text-muted">
           World Bank Pink Sheet &middot; Daily Forward-Fill
         </span>
       </div>
@@ -132,25 +132,25 @@ export function CommoditiesStrip() {
           return (
             <div
               key={item.id}
-              className="flex flex-col justify-between rounded-lg border border-[#1f1f23] bg-[#161619] p-2.5 transition hover:border-[#27272a] hover:bg-[#18181c]"
+              className="flex flex-col justify-between rounded-lg border border-cx-border bg-cx-surface p-2.5 transition hover:border-cx-border-subtle hover:bg-cx-hover"
             >
-              <div className="flex items-center justify-between text-zinc-400">
-                <span className="font-mono text-[10px] font-medium tracking-tight text-zinc-400">
+              <div className="flex items-center justify-between text-cx-text-secondary">
+                <span className="font-mono text-[10px] font-medium tracking-tight text-cx-text-secondary">
                   {item.label}
                 </span>
                 <Icon className={`h-3.5 w-3.5 ${item.iconColor}`} />
               </div>
 
               <div className="mt-1 flex items-baseline gap-1">
-                <span className="font-mono text-base font-semibold text-[#ededed]">
+                <span className="font-mono text-base font-semibold text-cx-text">
                   {item.value}
                 </span>
-                <span className="font-mono text-[10px] text-zinc-400">
+                <span className="font-mono text-[10px] text-cx-text-muted">
                   {item.unit}
                 </span>
               </div>
 
-              <div className="mt-0.5 text-[9px] text-zinc-400 truncate">
+              <div className="mt-0.5 text-[9px] text-cx-text-muted truncate">
                 {item.sub}
               </div>
             </div>

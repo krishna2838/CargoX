@@ -7,12 +7,8 @@ import {
   CheckCircle2,
   XCircle,
   AlertTriangle,
-  Anchor,
-  Compass,
   DollarSign,
-  Fuel,
   Ship,
-  Info,
 } from "lucide-react";
 import { RiskBadge } from "../ui/RiskBadge";
 
@@ -95,24 +91,24 @@ export function ScenarioTable({ scenarios }: ScenarioTableProps) {
   });
 
   return (
-    <div className="w-full rounded-xl border border-[#1f1f23] bg-[#121214] shadow-lg overflow-hidden">
-      <div className="flex items-center justify-between border-b border-[#1f1f23] px-4 py-3 bg-[#151518]">
+    <div className="w-full rounded-xl border border-cx-border bg-cx-card shadow-lg overflow-hidden">
+      <div className="flex items-center justify-between border-b border-cx-border px-4 py-3 bg-cx-surface">
         <div>
-          <h3 className="font-mono text-xs font-semibold uppercase tracking-wider text-[#ededed]">
+          <h3 className="font-mono text-xs font-semibold uppercase tracking-wider text-cx-text">
             Charter Scenario Comparison Matrix
           </h3>
-          <p className="text-[11px] text-zinc-400">
+          <p className="text-[11px] text-cx-text-secondary">
             Ranked by total landed INR cost per MT &bull; Click any row to expand cost breakdown
           </p>
         </div>
-        <span className="font-mono text-[10px] text-zinc-500">
+        <span className="font-mono text-[10px] text-cx-text-muted">
           {sortedScenarios.filter((s) => s.feasible).length} Feasible / {sortedScenarios.length} Classes
         </span>
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full text-left font-mono text-xs">
-          <thead className="border-b border-[#1f1f23] bg-[#101012] text-[10px] uppercase tracking-wider text-zinc-500">
+          <thead className="border-b border-cx-border bg-cx-surface text-[10px] uppercase tracking-wider text-cx-text-muted">
             <tr>
               <th className="px-4 py-2.5">RANK / CLASS</th>
               <th className="px-4 py-2.5 text-right">FREIGHT P50</th>
@@ -123,7 +119,7 @@ export function ScenarioTable({ scenarios }: ScenarioTableProps) {
               <th className="px-3 py-2.5 text-center">AUDIT</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#1c1c20]">
+          <tbody className="divide-y divide-cx-border">
             {sortedScenarios.map((item, idx) => {
               const isExpanded = expandedClass === item.vessel_class;
               const isFeasible = item.feasible;
@@ -134,10 +130,10 @@ export function ScenarioTable({ scenarios }: ScenarioTableProps) {
                     onClick={() => toggleExpand(item.vessel_class)}
                     className={`cursor-pointer transition ${
                       !isFeasible
-                        ? "opacity-60 bg-[#0e0e11]/80 hover:opacity-90 hover:bg-[#15151a]"
+                        ? "opacity-60 bg-cx-surface/60 hover:opacity-90 hover:bg-cx-hover"
                         : isExpanded
-                          ? "bg-[#18181d]"
-                          : "hover:bg-[#16161a]"
+                          ? "bg-cx-hover"
+                          : "hover:bg-cx-hover"
                     }`}
                   >
                     {/* Rank / Class */}
@@ -148,17 +144,17 @@ export function ScenarioTable({ scenarios }: ScenarioTableProps) {
                             isFeasible
                               ? idx === 0
                                 ? "bg-blue-600 text-white shadow-xs"
-                                : "bg-zinc-800 text-zinc-300"
-                              : "bg-zinc-900 text-zinc-600"
+                                : "bg-cx-surface text-cx-text border border-cx-border"
+                              : "bg-cx-surface text-cx-text-muted"
                           }`}
                         >
                           {idx + 1}
                         </span>
                         <div>
-                          <div className="font-semibold text-[#ededed]">
+                          <div className="font-semibold text-cx-text">
                             {item.vessel_class}
                           </div>
-                          <div className="text-[10px] text-zinc-500">
+                          <div className="text-[10px] text-cx-text-muted">
                             Index: {item.sub_index}
                           </div>
                         </div>
@@ -167,10 +163,10 @@ export function ScenarioTable({ scenarios }: ScenarioTableProps) {
 
                     {/* Freight P50 */}
                     <td className="px-4 py-3.5 text-right whitespace-nowrap">
-                      <div className="text-[#ededed] font-semibold">
+                      <div className="text-cx-text font-semibold">
                         ₹{Math.round(item.costs.freight_cost_per_tonne_inr.p50).toLocaleString()}
                       </div>
-                      <div className="text-[10px] text-zinc-500">
+                      <div className="text-[10px] text-cx-text-muted">
                         ${item.costs.freight_cost_per_tonne_usd.p50.toFixed(2)}/t
                       </div>
                     </td>
@@ -179,24 +175,24 @@ export function ScenarioTable({ scenarios }: ScenarioTableProps) {
                     <td className="px-4 py-3.5 text-right whitespace-nowrap">
                       <div
                         className={`text-sm font-bold ${
-                          idx === 0 && isFeasible ? "text-emerald-400" : "text-[#ededed]"
+                          idx === 0 && isFeasible ? "text-emerald-500 dark:text-emerald-400" : "text-cx-text"
                         }`}
                       >
                         ₹{Math.round(item.costs.landed_cost_per_tonne_inr.p50).toLocaleString()}
                       </div>
-                      <div className="text-[10px] text-zinc-500">
+                      <div className="text-[10px] text-cx-text-muted">
                         ${item.costs.landed_cost_per_tonne_usd.p50.toFixed(2)}/t
                       </div>
                     </td>
 
                     {/* ETA & Laycan */}
                     <td className="px-4 py-3.5 whitespace-nowrap">
-                      <div className="text-[#ededed]">{item.voyage.eta}</div>
+                      <div className="text-cx-text">{item.voyage.eta}</div>
                       <div className="text-[10px]">
                         {item.voyage.laycan_compatible ? (
-                          <span className="text-emerald-400">✓ In window</span>
+                          <span className="text-emerald-500 dark:text-emerald-400 font-medium">✓ In window</span>
                         ) : (
-                          <span className="text-amber-400">
+                          <span className="text-amber-500 dark:text-amber-400 font-medium">
                             ⚠ {item.voyage.days_offset_laycan || "Late"} days late
                           </span>
                         )}
@@ -206,16 +202,16 @@ export function ScenarioTable({ scenarios }: ScenarioTableProps) {
                     {/* Draft & Physical Fit */}
                     <td className="px-4 py-3.5">
                       {isFeasible ? (
-                        <div className="flex items-center gap-1.5 text-emerald-400">
+                        <div className="flex items-center gap-1.5 text-emerald-500 dark:text-emerald-400">
                           <CheckCircle2 className="h-4 w-4 shrink-0" />
                           <span className="text-[11px] truncate max-w-[200px]">
                             {item.feasibility_detail.summary || "Feasible"}
                           </span>
                         </div>
                       ) : (
-                        <div className="flex items-center gap-1.5 text-rose-400">
+                        <div className="flex items-center gap-1.5 text-rose-500">
                           <XCircle className="h-4 w-4 shrink-0" />
-                          <span className="text-[11px] text-rose-300 truncate max-w-[220px]">
+                          <span className="text-[11px] text-rose-500 truncate max-w-[220px]">
                             {item.feasibility_detail.summary || "Infeasible"}
                           </span>
                         </div>
@@ -228,9 +224,9 @@ export function ScenarioTable({ scenarios }: ScenarioTableProps) {
                     </td>
 
                     {/* Audit / Expand trigger */}
-                    <td className="px-3 py-3.5 text-center text-zinc-400">
+                    <td className="px-3 py-3.5 text-center text-cx-text-secondary">
                       {isExpanded ? (
-                        <ChevronUp className="h-4 w-4 inline text-blue-400" />
+                        <ChevronUp className="h-4 w-4 inline text-blue-500" />
                       ) : (
                         <ChevronDown className="h-4 w-4 inline" />
                       )}
@@ -239,16 +235,16 @@ export function ScenarioTable({ scenarios }: ScenarioTableProps) {
 
                   {/* ── EXPANDED "SHOW YOUR WORKING" AUDIT ROW ── */}
                   {isExpanded && (
-                    <tr className="bg-[#0f0f13] border-b border-[#23232b]">
+                    <tr className="bg-cx-surface/40 border-b border-cx-border">
                       <td colSpan={7} className="p-4 sm:p-5">
                         <div className="space-y-4 font-sans text-xs">
                           {/* Infeasible warning banner if applicable */}
                           {!isFeasible && item.feasibility_detail.reasons && (
-                            <div className="rounded-lg border border-rose-900/50 bg-rose-950/20 p-3 text-rose-300 flex items-start gap-2 font-mono text-[11px]">
-                              <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5 text-rose-400" />
+                            <div className="rounded-lg border border-rose-500/30 bg-rose-500/10 p-3 text-rose-600 dark:text-rose-400 flex items-start gap-2 font-mono text-[11px]">
+                              <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5 text-rose-500" />
                               <div>
                                 <strong className="font-semibold">Feasibility Violations:</strong>
-                                <ul className="list-disc list-inside mt-1 space-y-0.5 text-rose-400/90">
+                                <ul className="list-disc list-inside mt-1 space-y-0.5 opacity-90">
                                   {item.feasibility_detail.reasons.map((r, i) => (
                                     <li key={i}>{r}</li>
                                   ))}
@@ -259,64 +255,64 @@ export function ScenarioTable({ scenarios }: ScenarioTableProps) {
 
                           {/* 1. Transparent Voyage Cost Decomposition */}
                           <div>
-                            <div className="flex items-center gap-1.5 font-mono text-[11px] font-semibold text-blue-400 uppercase tracking-wider mb-2">
+                            <div className="flex items-center gap-1.5 font-mono text-[11px] font-semibold text-blue-500 uppercase tracking-wider mb-2">
                               <DollarSign className="h-3.5 w-3.5" />
                               <span>Voyage Cost Decomposition (Show Your Working)</span>
                             </div>
 
                             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 font-mono">
-                              <div className="rounded-lg border border-[#1f1f23] bg-[#151518] p-2.5">
-                                <div className="text-[10px] text-zinc-500">DAILY HIRE (P50)</div>
-                                <div className="mt-1 font-semibold text-[#ededed]">
+                              <div className="rounded-lg border border-cx-border bg-cx-card p-2.5">
+                                <div className="text-[10px] text-cx-text-muted">DAILY HIRE (P50)</div>
+                                <div className="mt-1 font-semibold text-cx-text">
                                   ${Math.round(item.costs.daily_hire_usd_p50).toLocaleString()}/d
                                 </div>
-                                <div className="text-[9px] text-zinc-500">
+                                <div className="text-[9px] text-cx-text-muted">
                                   {item.voyage.total_voyage_days.toFixed(1)} voyage days
                                 </div>
                               </div>
 
-                              <div className="rounded-lg border border-[#1f1f23] bg-[#151518] p-2.5">
-                                <div className="text-[10px] text-zinc-500">BUNKER COST</div>
-                                <div className="mt-1 font-semibold text-[#ededed]">
+                              <div className="rounded-lg border border-cx-border bg-cx-card p-2.5">
+                                <div className="text-[10px] text-cx-text-muted">BUNKER COST</div>
+                                <div className="mt-1 font-semibold text-cx-text">
                                   ${Math.round(item.costs.bunker_cost_usd_p50).toLocaleString()}
                                 </div>
-                                <div className="text-[9px] text-zinc-500">VLSFO sea + port burn</div>
+                                <div className="text-[9px] text-cx-text-muted">VLSFO sea + port burn</div>
                               </div>
 
-                              <div className="rounded-lg border border-[#1f1f23] bg-[#151518] p-2.5">
-                                <div className="text-[10px] text-zinc-500">PORT DUES</div>
-                                <div className="mt-1 font-semibold text-[#ededed]">
+                              <div className="rounded-lg border border-cx-border bg-cx-card p-2.5">
+                                <div className="text-[10px] text-cx-text-muted">PORT DUES</div>
+                                <div className="mt-1 font-semibold text-cx-text">
                                   ${Math.round(item.costs.port_charges_usd).toLocaleString()}
                                 </div>
-                                <div className="text-[9px] text-zinc-500">Load &amp; discharge tariffs</div>
+                                <div className="text-[9px] text-cx-text-muted">Load &amp; discharge tariffs</div>
                               </div>
 
-                              <div className="rounded-lg border border-[#1f1f23] bg-[#151518] p-2.5">
-                                <div className="text-[10px] text-zinc-500">FREIGHT / MT</div>
-                                <div className="mt-1 font-semibold text-blue-300">
+                              <div className="rounded-lg border border-cx-border bg-cx-card p-2.5">
+                                <div className="text-[10px] text-cx-text-muted">FREIGHT / MT</div>
+                                <div className="mt-1 font-semibold text-blue-500">
                                   ₹{Math.round(item.costs.freight_cost_per_tonne_inr.p50).toLocaleString()}
                                 </div>
-                                <div className="text-[9px] text-zinc-500">
+                                <div className="text-[9px] text-cx-text-muted">
                                   ${item.costs.freight_cost_per_tonne_usd.p50.toFixed(2)} / MT
                                 </div>
                               </div>
 
-                              <div className="rounded-lg border border-[#1f1f23] bg-[#151518] p-2.5">
-                                <div className="text-[10px] text-zinc-500">COMMODITY / MT</div>
-                                <div className="mt-1 font-semibold text-[#ededed]">
+                              <div className="rounded-lg border border-cx-border bg-cx-card p-2.5">
+                                <div className="text-[10px] text-cx-text-muted">COMMODITY / MT</div>
+                                <div className="mt-1 font-semibold text-cx-text">
                                   ₹{Math.round(item.costs.commodity_cost_per_tonne_inr).toLocaleString()}
                                 </div>
-                                <div className="text-[9px] text-zinc-500">
+                                <div className="text-[9px] text-cx-text-muted">
                                   ${item.costs.commodity_cost_per_tonne_usd.toFixed(2)} FOB
                                 </div>
                               </div>
 
-                              <div className="rounded-lg border border-blue-900/40 bg-blue-950/20 p-2.5">
-                                <div className="text-[10px] text-blue-400 font-semibold">TOTAL LANDED / MT</div>
-                                <div className="mt-1 font-bold text-emerald-400">
+                              <div className="rounded-lg border border-blue-500/30 bg-blue-500/10 p-2.5">
+                                <div className="text-[10px] text-blue-500 font-semibold">TOTAL LANDED / MT</div>
+                                <div className="mt-1 font-bold text-emerald-500 dark:text-emerald-400">
                                   ₹{Math.round(item.costs.landed_cost_per_tonne_inr.p50).toLocaleString()}
                                 </div>
-                                <div className="text-[9px] text-blue-300">
+                                <div className="text-[9px] text-blue-500">
                                   ${item.costs.landed_cost_per_tonne_usd.p50.toFixed(2)} CFR
                                 </div>
                               </div>
@@ -325,53 +321,53 @@ export function ScenarioTable({ scenarios }: ScenarioTableProps) {
 
                           {/* 2. P10 / P50 / P90 Quantile Envelope Table */}
                           <div>
-                            <div className="flex items-center gap-1.5 font-mono text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1.5">
+                            <div className="flex items-center gap-1.5 font-mono text-[11px] font-semibold text-cx-text-secondary uppercase tracking-wider mb-1.5">
                               <span>Probabilistic Quantile Uncertainty Band (28-Day Horizon)</span>
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 font-mono text-xs">
-                              <div className="rounded-lg border border-[#1f1f23] bg-[#141416] p-2.5">
-                                <div className="text-[10px] text-zinc-500">P10 (BEST CASE / SOFT MARKET)</div>
+                              <div className="rounded-lg border border-cx-border bg-cx-card p-2.5">
+                                <div className="text-[10px] text-cx-text-muted">P10 (BEST CASE / SOFT MARKET)</div>
                                 <div className="mt-1 flex items-baseline justify-between">
-                                  <span className="text-zinc-400">Freight:</span>
-                                  <span className="font-semibold text-blue-300">
+                                  <span className="text-cx-text-secondary">Freight:</span>
+                                  <span className="font-semibold text-blue-500">
                                     ₹{Math.round(item.costs.freight_cost_per_tonne_inr.p10).toLocaleString()}/t
                                   </span>
                                 </div>
-                                <div className="flex items-baseline justify-between text-zinc-300">
-                                  <span className="text-zinc-500 text-[10px]">Landed:</span>
+                                <div className="flex items-baseline justify-between text-cx-text">
+                                  <span className="text-cx-text-muted text-[10px]">Landed:</span>
                                   <span className="font-semibold">
                                     ₹{Math.round(item.costs.landed_cost_per_tonne_inr.p10).toLocaleString()}/t
                                   </span>
                                 </div>
                               </div>
 
-                              <div className="rounded-lg border border-blue-900/40 bg-blue-950/30 p-2.5">
-                                <div className="text-[10px] text-blue-400 font-semibold">P50 (EXPECTED BASELINE)</div>
+                              <div className="rounded-lg border border-blue-500/30 bg-blue-500/10 p-2.5">
+                                <div className="text-[10px] text-blue-500 font-semibold">P50 (EXPECTED BASELINE)</div>
                                 <div className="mt-1 flex items-baseline justify-between">
-                                  <span className="text-zinc-400">Freight:</span>
-                                  <span className="font-semibold text-white">
+                                  <span className="text-cx-text-secondary">Freight:</span>
+                                  <span className="font-semibold text-cx-text">
                                     ₹{Math.round(item.costs.freight_cost_per_tonne_inr.p50).toLocaleString()}/t
                                   </span>
                                 </div>
-                                <div className="flex items-baseline justify-between text-emerald-400">
-                                  <span className="text-zinc-400 text-[10px]">Landed:</span>
+                                <div className="flex items-baseline justify-between text-emerald-500 dark:text-emerald-400">
+                                  <span className="text-cx-text-muted text-[10px]">Landed:</span>
                                   <span className="font-bold">
                                     ₹{Math.round(item.costs.landed_cost_per_tonne_inr.p50).toLocaleString()}/t
                                   </span>
                                 </div>
                               </div>
 
-                              <div className="rounded-lg border border-[#1f1f23] bg-[#141416] p-2.5">
-                                <div className="text-[10px] text-zinc-500">P90 (WORST CASE / TIGHT MARKET)</div>
+                              <div className="rounded-lg border border-cx-border bg-cx-card p-2.5">
+                                <div className="text-[10px] text-cx-text-muted">P90 (WORST CASE / TIGHT MARKET)</div>
                                 <div className="mt-1 flex items-baseline justify-between">
-                                  <span className="text-zinc-400">Freight:</span>
-                                  <span className="font-semibold text-blue-300">
+                                  <span className="text-cx-text-secondary">Freight:</span>
+                                  <span className="font-semibold text-blue-500">
                                     ₹{Math.round(item.costs.freight_cost_per_tonne_inr.p90).toLocaleString()}/t
                                   </span>
                                 </div>
-                                <div className="flex items-baseline justify-between text-zinc-300">
-                                  <span className="text-zinc-500 text-[10px]">Landed:</span>
+                                <div className="flex items-baseline justify-between text-cx-text">
+                                  <span className="text-cx-text-muted text-[10px]">Landed:</span>
                                   <span className="font-semibold">
                                     ₹{Math.round(item.costs.landed_cost_per_tonne_inr.p90).toLocaleString()}/t
                                   </span>
@@ -382,11 +378,11 @@ export function ScenarioTable({ scenarios }: ScenarioTableProps) {
 
                           {/* 3. Attached Example Vessel Telemetry */}
                           {item.example_vessel && (
-                            <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[#1f1f23] pt-2 font-mono text-[11px] text-zinc-400">
+                            <div className="flex flex-wrap items-center justify-between gap-2 border-t border-cx-border pt-2 font-mono text-[11px] text-cx-text-secondary">
                               <div className="flex items-center gap-1.5">
-                                <Ship className="h-3.5 w-3.5 text-blue-400" />
+                                <Ship className="h-3.5 w-3.5 text-blue-500" />
                                 <span>Attached Live Ship:</span>
-                                <strong className="text-[#ededed]">
+                                <strong className="text-cx-text">
                                   {item.example_vessel.name || `MMSI ${item.example_vessel.mmsi}`}
                                 </strong>
                               </div>

@@ -26,31 +26,31 @@ export function StatCard({
   delta,
   icon,
   sparklineData,
-  sparklineColor = "#3b82f6",
+  sparklineColor = "var(--cx-accent)",
   badge,
   className = "",
 }: StatCardProps) {
   return (
     <div
-      className={`relative overflow-hidden rounded-lg border border-[#1f1f23] bg-[#121214] p-4 transition-all duration-150 hover:border-[#27272a] hover:bg-[#151518] ${className}`}
+      className={`relative overflow-hidden rounded-lg border border-cx-border bg-cx-card p-4 transition-all duration-150 hover:border-cx-border-subtle hover:bg-cx-hover ${className}`}
     >
       <div className="flex items-center justify-between gap-2">
-        <span className="text-xs font-medium uppercase tracking-wider text-zinc-400">
+        <span className="text-xs font-medium uppercase tracking-wider text-cx-text-secondary">
           {title}
         </span>
         <div className="flex items-center gap-1.5">
           {badge}
-          {icon && <span className="text-zinc-500">{icon}</span>}
+          {icon && <span className="text-cx-text-muted">{icon}</span>}
         </div>
       </div>
 
       <div className="mt-2.5 flex items-baseline justify-between gap-2">
         <div className="flex items-baseline gap-1.5">
-          <span className="font-mono text-2xl font-semibold tracking-tight text-[#ededed]">
+          <span className="font-mono text-2xl font-semibold tracking-tight text-cx-text">
             {value}
           </span>
           {unit && (
-            <span className="font-mono text-xs text-zinc-400">{unit}</span>
+            <span className="font-mono text-xs text-cx-text-muted">{unit}</span>
           )}
         </div>
 
@@ -72,20 +72,20 @@ export function StatCard({
             <span
               className={`inline-flex items-center gap-0.5 font-mono font-medium ${
                 delta.isPositive === true
-                  ? "text-emerald-400"
+                  ? "text-emerald-500 dark:text-emerald-400"
                   : delta.isPositive === false
-                    ? "text-rose-400"
-                    : "text-zinc-400"
+                    ? "text-rose-500 dark:text-rose-400"
+                    : "text-cx-text-secondary"
               }`}
             >
               <span>{delta.isPositive ? "▲" : delta.isPositive === false ? "▼" : "•"}</span>
               <span>{delta.value}</span>
               {delta.label && (
-                <span className="ml-1 text-zinc-500">{delta.label}</span>
+                <span className="ml-1 text-cx-text-muted">{delta.label}</span>
               )}
             </span>
           )}
-          {subValue && <span className="text-zinc-400 truncate">{subValue}</span>}
+          {subValue && <span className="text-cx-text-secondary truncate">{subValue}</span>}
         </div>
       )}
     </div>

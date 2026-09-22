@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ChevronUp, ChevronDown, Ship, Sliders, Info } from "lucide-react";
+import { ChevronUp, ChevronDown, Ship, Sliders } from "lucide-react";
 import { DataTable, Column } from "../ui/DataTable";
 
 export interface OpenVessel {
@@ -35,11 +35,11 @@ export function TonnageListDrawer({
       header: "VESSEL",
       accessor: (row) => (
         <div className="flex items-center gap-2">
-          <span className="font-semibold text-[#ededed]">{row.name}</span>
+          <span className="font-semibold text-cx-text">{row.name}</span>
           {row.is_seeded && (
             <span
               title="Demonstration record: live inbound destination reports currently thin"
-              className="inline-flex items-center rounded border border-zinc-700 bg-zinc-800/80 px-1 py-0.2 text-[9px] font-mono text-zinc-400 cursor-help"
+              className="inline-flex items-center rounded border border-amber-500/30 bg-amber-500/10 px-1 py-0.2 text-[9px] font-mono text-amber-500 cursor-help"
             >
               SEEDED
             </span>
@@ -51,7 +51,7 @@ export function TonnageListDrawer({
       key: "inferred_class",
       header: "CLASS",
       accessor: (row) => (
-        <span className="rounded bg-blue-950/40 border border-blue-900/40 px-1.5 py-0.5 font-mono text-[10px] text-blue-400 font-semibold">
+        <span className="rounded bg-blue-500/10 border border-blue-500/30 px-1.5 py-0.5 font-mono text-[10px] text-blue-500 font-semibold">
           {row.inferred_class}
         </span>
       ),
@@ -61,7 +61,7 @@ export function TonnageListDrawer({
       header: "CAPACITY",
       align: "right",
       accessor: (row) => (
-        <span className="text-zinc-300">
+        <span className="text-cx-text">
           {row.dwt_capacity ? `${(row.dwt_capacity / 1000).toFixed(0)}k DWT` : "--"}
         </span>
       ),
@@ -71,7 +71,7 @@ export function TonnageListDrawer({
       header: "DRAFT",
       align: "right",
       accessor: (row) => (
-        <span className="text-zinc-300">
+        <span className="text-cx-text">
           {row.draft ? `${Number(row.draft).toFixed(1)}m` : "--"}
         </span>
       ),
@@ -80,7 +80,7 @@ export function TonnageListDrawer({
       key: "destination",
       header: "DESTINATION",
       accessor: (row) => (
-        <span className="text-emerald-400 font-semibold uppercase">
+        <span className="text-emerald-500 dark:text-emerald-400 font-semibold uppercase">
           {row.destination}
         </span>
       ),
@@ -89,7 +89,7 @@ export function TonnageListDrawer({
       key: "eta",
       header: "ETA INDIA",
       accessor: (row) => (
-        <span className="text-zinc-400 font-mono text-[11px]">{row.eta}</span>
+        <span className="text-cx-text-secondary font-mono text-[11px]">{row.eta}</span>
       ),
     },
     {
@@ -111,7 +111,7 @@ export function TonnageListDrawer({
           <Link
             href={`/decision?${queryParams.toString()}`}
             onClick={(e) => e.stopPropagation()}
-            className="inline-flex items-center gap-1 rounded bg-blue-600/20 border border-blue-500/40 px-2 py-1 font-mono text-[10px] font-medium text-blue-300 hover:bg-blue-600 hover:text-white transition"
+            className="inline-flex items-center gap-1 rounded bg-blue-500/10 border border-blue-500/30 px-2 py-1 font-mono text-[10px] font-medium text-blue-500 hover:bg-blue-600 hover:text-white transition"
           >
             <Sliders className="h-3 w-3" />
             <span>Use vessel</span>
@@ -128,26 +128,26 @@ export function TonnageListDrawer({
       } ${className}`}
     >
       <div className="mx-auto max-w-6xl px-0 sm:px-4">
-        <div className="rounded-none sm:rounded-t-xl border-t sm:border-x border-[#1f1f23] bg-[#0f0f12]/95 backdrop-blur-md shadow-2xl">
+        <div className="rounded-none sm:rounded-t-xl border-t sm:border-x border-cx-border bg-cx-surface/95 backdrop-blur-md shadow-2xl">
           {/* Header Bar / Toggle Handle */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="flex w-full items-center justify-between px-4 py-2.5 text-left transition hover:bg-[#161619]"
+            className="flex w-full items-center justify-between px-4 py-2.5 text-left transition hover:bg-cx-hover"
           >
             <div className="flex items-center gap-2.5">
-              <Ship className="h-4 w-4 text-blue-400" />
-              <span className="font-mono text-xs font-semibold tracking-wider text-[#ededed]">
+              <Ship className="h-4 w-4 text-blue-500" />
+              <span className="font-mono text-xs font-semibold tracking-wider text-cx-text">
                 TONNAGE LIST
               </span>
-              <span className="rounded-full bg-blue-950/60 border border-blue-800/60 px-2 py-0.2 font-mono text-[10px] text-blue-400">
+              <span className="rounded-full bg-blue-500/10 border border-blue-500/30 px-2 py-0.2 font-mono text-[10px] text-blue-500">
                 {vessels.length} inbound ships
               </span>
-              <span className="hidden sm:inline-block text-zinc-500 text-xs font-mono">
+              <span className="hidden sm:inline-block text-cx-text-muted text-xs font-mono">
                 Heading towards Indian East Coast discharge ports
               </span>
             </div>
 
-            <div className="flex items-center gap-1 text-zinc-400 font-mono text-xs">
+            <div className="flex items-center gap-1 text-cx-text-secondary font-mono text-xs">
               <span>{isOpen ? "COLLAPSE" : "EXPAND"}</span>
               {isOpen ? (
                 <ChevronDown className="h-4 w-4" />
@@ -159,7 +159,7 @@ export function TonnageListDrawer({
 
           {/* Table Container */}
           {isOpen && (
-            <div className="max-h-72 overflow-y-auto p-3 border-t border-[#1f1f23]">
+            <div className="max-h-72 overflow-y-auto p-3 border-t border-cx-border">
               <DataTable
                 columns={columns}
                 data={vessels}

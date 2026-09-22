@@ -15,17 +15,17 @@ export function RiskBadge({
 }: RiskBadgeProps) {
   const normBand = (band || "low").toLowerCase();
 
-  let colorClasses = "bg-emerald-950/40 text-emerald-400 border-emerald-800/60";
-  let dotColor = "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]";
+  let colorClasses = "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30";
+  let dotColor = "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]";
   let label = "LOW RISK";
 
   if (normBand === "high") {
-    colorClasses = "bg-rose-950/40 text-rose-400 border-rose-800/60";
-    dotColor = "bg-rose-400 shadow-[0_0_8px_rgba(251,113,133,0.6)]";
+    colorClasses = "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/30";
+    dotColor = "bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.5)]";
     label = "HIGH RISK";
   } else if (normBand === "medium" || normBand === "med") {
-    colorClasses = "bg-amber-950/40 text-amber-400 border-amber-800/60";
-    dotColor = "bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]";
+    colorClasses = "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30";
+    dotColor = "bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]";
     label = "MED RISK";
   }
 

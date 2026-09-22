@@ -11,6 +11,7 @@ import {
 } from "react-leaflet";
 import L from "leaflet";
 import { Anchor, Compass, Maximize2, Navigation, Ship } from "lucide-react";
+import { useTheme } from "../providers/ThemeProvider";
 
 export interface PortData {
   id: string;
@@ -83,13 +84,13 @@ function createVesselIcon(vessel: VesselItem, isSelected: boolean): L.DivIcon {
           : ""
       }
       <div style="transform: rotate(${heading}deg); transform-origin: center; display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease;">
-        <svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));">
+        <svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));">
           <!-- Ship Hull Polygon -->
-          <polygon points="12,2 18,18 12,15 6,18" fill="${color}" stroke="#0a0a0a" stroke-width="1.5" />
+          <polygon points="12,2 18,18 12,15 6,18" fill="${color}" stroke="#1a1a2e" stroke-width="1.5" />
           ${
             isMoving
               ? `<circle cx="12" cy="11" r="1.75" fill="#ffffff" />`
-              : `<rect x="10" y="10" width="4" height="4" fill="#0a0a0a" />`
+              : `<rect x="10" y="10" width="4" height="4" fill="#1a1a2e" />`
           }
         </svg>
       </div>
@@ -116,7 +117,7 @@ function createPortIcon(port: PortData): L.DivIcon {
           <path d="M5 12H2a10 10 0 0 0 20 0h-3"></path>
         </svg>
       </div>
-      <div style="margin-top: 2px; background-color: #0d0d0f; border: 1px solid #27272a; padding: 1px 4px; border-radius: 4px; font-family: monospace; font-size: 9px; font-weight: 600; color: #a5b4fc; white-space: nowrap; box-shadow: 0 2px 4px rgba(0,0,0,0.6);">
+      <div style="margin-top: 2px; background-color: var(--cx-bg-surface, #121214); border: 1px solid var(--cx-border, #27272a); padding: 1px 5px; border-radius: 4px; font-family: monospace; font-size: 9px; font-weight: 600; color: #4338ca; white-space: nowrap; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
         ${port.name} (${port.max_draft_m}m)
       </div>
     </div>
@@ -153,17 +154,27 @@ export function LiveMapInner({
   onSelectVessel,
   onSelectPort,
 }: LiveMapInnerProps) {
+  const { theme } = useTheme();
+
   // Filter and loading state
   const [classFilter, setClassFilter] = useState<string>("ALL");
   const [mapCenter, setMapCenter] = useState<[number, number]>([15.5, 87.0]);
   const [mapZoom, setMapZoom] = useState<number>(5);
   const [tilesLoaded, setTilesLoaded] = useState(false);
 
+  const apiKey = process.env.NEXT_PUBLIC_CARTO_API_KEY || "cb1_3tnn_1_a5741039008996c36a4ff345";
+  const tileUrl = useMemo(() => {
+    if (theme === "light") {
+      return `https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?api_key=${apiKey}`;
+    }
+    return `https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?api_key=${apiKey}`;
+  }, [theme, apiKey]);
+
   // Safety fallback so skeleton never hangs if a single tile lags
   useEffect(() => {
-    const timer = setTimeout(() => setTilesLoaded(true), 2500);
+    const timer = setTimeout(() => setTilesLoaded(true), 2000);
     return () => clearTimeout(timer);
-  }, []);
+  }, [theme]);
 
   const filteredVessels = useMemo(() => {
     if (classFilter === "ALL") return vessels;
@@ -171,31 +182,27 @@ export function LiveMapInner({
   }, [vessels, classFilter]);
 
   return (
-    <div className="relative h-full w-full">
-      {/* ── Dark Tile Painting Radar Skeleton Overlay ── */}
+    <div className="relative h-full w-full bg-cx-bg">
+      {/* ── Tile Painting Radar Skeleton Overlay ── */}
       {!tilesLoaded && (
-        <div className="pointer-events-none absolute inset-0 z-[450] flex flex-col items-center justify-center bg-[#0a0a0a] transition-opacity duration-500">
+        <div className="pointer-events-none absolute inset-0 z-[450] flex flex-col items-center justify-center bg-cx-bg transition-opacity duration-500">
           <div className="relative flex h-36 w-36 items-center justify-center">
             <div className="absolute h-36 w-36 rounded-full border border-blue-500/10 animate-ping opacity-25" />
             <div className="absolute h-24 w-24 rounded-full border border-blue-500/20 animate-pulse" />
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-950/60 border border-blue-500/50 shadow-[0_0_20px_rgba(59,130,246,0.5)]">
-              <Compass className="h-6 w-6 text-blue-400 animate-spin [animation-duration:8s]" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/10 border border-blue-500/40">
+              <Compass className="h-6 w-6 text-blue-500 animate-spin [animation-duration:6s]" />
             </div>
           </div>
-          <div className="mt-4 font-mono text-xs font-semibold text-blue-400 flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>PAINTING NAUTICAL TILES</span>
-          </div>
-          <p className="mt-1 font-mono text-[11px] text-zinc-500">
-            Fetching CartoDB Dark Matter tiles & positioning fleet…
+          <p className="mt-4 font-mono text-xs text-cx-text-muted">
+            Fetching maritime basemap tiles & positioning fleet…
           </p>
         </div>
       )}
 
       {/* ── Floating Map Controls Bar ── */}
-      <div className="absolute top-3 left-3 z-[400] flex flex-wrap items-center gap-2 rounded-lg border border-[#1f1f23] bg-[#0d0d0f]/90 p-1.5 backdrop-blur-md shadow-xl text-xs">
+      <div className="absolute top-3 left-3 z-[400] flex flex-wrap items-center gap-2 rounded-lg border border-cx-border bg-cx-surface/95 p-1.5 backdrop-blur-md shadow-xl text-xs">
         {/* Class Filters */}
-        <span className="font-mono text-[10px] text-zinc-500 uppercase px-1.5">
+        <span className="font-mono text-[10px] text-cx-text-muted uppercase px-1.5">
           CLASS:
         </span>
         {["ALL", "Capesize", "Panamax", "Supramax", "Handysize"].map((c) => (
@@ -205,14 +212,14 @@ export function LiveMapInner({
             className={`rounded px-2 py-1 font-mono text-[11px] font-medium transition ${
               classFilter === c
                 ? "bg-blue-600 text-white font-semibold shadow-xs"
-                : "text-zinc-400 hover:bg-[#1f1f23] hover:text-[#ededed]"
+                : "text-cx-text-secondary hover:bg-cx-hover hover:text-cx-text"
             }`}
           >
             {c}
           </button>
         ))}
 
-        <span className="text-zinc-700">|</span>
+        <span className="text-cx-border">|</span>
 
         {/* Quick Zoom Views */}
         <button
@@ -220,7 +227,7 @@ export function LiveMapInner({
             setMapCenter([16.0, 86.5]);
             setMapZoom(5);
           }}
-          className="rounded px-2 py-1 font-mono text-[11px] text-zinc-400 hover:bg-[#1f1f23] hover:text-blue-400"
+          className="rounded px-2 py-1 font-mono text-[11px] text-cx-text-secondary hover:bg-cx-hover hover:text-blue-500"
         >
           Bay of Bengal
         </button>
@@ -229,36 +236,46 @@ export function LiveMapInner({
             setMapCenter([-21.0, 120.0]);
             setMapZoom(5);
           }}
-          className="rounded px-2 py-1 font-mono text-[11px] text-zinc-400 hover:bg-[#1f1f23] hover:text-blue-400"
+          className="rounded px-2 py-1 font-mono text-[11px] text-cx-text-secondary hover:bg-cx-hover hover:text-blue-500"
         >
           NW Australia
         </button>
       </div>
 
       {/* ── Floating Legend Overlay ── */}
-      <div className="absolute bottom-14 right-3 z-[400] hidden sm:flex flex-col gap-1.5 rounded-lg border border-[#1f1f23] bg-[#0d0d0f]/90 p-2.5 backdrop-blur-md shadow-xl text-[11px] font-mono">
-        <span className="text-[10px] text-zinc-500 font-semibold uppercase tracking-wider">
-          BULK VESSEL CLASSES
+      <div className="absolute bottom-14 right-3 z-[400] hidden sm:flex flex-col gap-1.5 rounded-lg border border-cx-border bg-cx-surface/95 p-2.5 backdrop-blur-md shadow-xl text-[11px] font-mono">
+        <span className="text-[10px] text-cx-text-muted font-semibold uppercase tracking-wider">
+          Vessel Classes
         </span>
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#c084fc]" />
-          <span className="text-zinc-300">Capesize (≥260m)</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#3b82f6]" />
-          <span className="text-zinc-300">Panamax / Kamsarmax</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#06b6d4]" />
-          <span className="text-zinc-300">Supramax (170–215m)</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#10b981]" />
-          <span className="text-zinc-300">Handysize (100–170m)</span>
+        <div className="grid grid-cols-2 gap-x-3 gap-y-1">
+          <div className="flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-[#c084fc]" />
+            <span className="text-cx-text-secondary">Capesize</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-[#38bdf8]" />
+            <span className="text-cx-text-secondary">Kamsarmax</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-[#3b82f6]" />
+            <span className="text-cx-text-secondary">Panamax</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-[#06b6d4]" />
+            <span className="text-cx-text-secondary">Supramax</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-[#10b981]" />
+            <span className="text-cx-text-secondary">Handysize</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-[#6366f1]" />
+            <span className="text-cx-text-secondary">Discharge Port</span>
+          </div>
         </div>
       </div>
 
-      {/* ── Leaflet Map Container ── */}
+      {/* ── Main Leaflet Container ── */}
       <MapContainer
         center={mapCenter}
         zoom={mapZoom}
@@ -267,13 +284,10 @@ export function LiveMapInner({
       >
         <MapController center={mapCenter} zoom={mapZoom} />
 
-        {/* CartoDB Dark Matter tiles with API key */}
+        {/* Dynamic Basemap Tiles (CartoDB Dark Matter / Positron) */}
         <TileLayer
-          url={
-            process.env.NEXT_PUBLIC_CARTO_API_KEY
-              ? `https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?api_key=${process.env.NEXT_PUBLIC_CARTO_API_KEY}`
-              : "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?api_key=cb1_3tnn_1_a5741039008996c36a4ff345"
-          }
+          key={theme}
+          url={tileUrl}
           attribution='&copy; <a href="https://carto.com/">CARTO</a>'
           maxZoom={18}
           eventHandlers={{
@@ -292,40 +306,40 @@ export function LiveMapInner({
             }}
           >
             <Popup>
-              <div className="p-3 space-y-1.5 font-mono text-xs text-[#ededed]">
-                <div className="flex items-center justify-between gap-2 border-b border-[#27272a] pb-1.5">
-                  <span className="font-semibold text-blue-400 uppercase">
+              <div className="p-3 space-y-1.5 font-mono text-xs text-cx-text">
+                <div className="flex items-center justify-between gap-2 border-b border-cx-border-subtle pb-1.5">
+                  <span className="font-semibold text-blue-500 uppercase">
                     {port.name}
                   </span>
-                  <span className="text-[10px] text-zinc-400">DISCHARGE</span>
+                  <span className="text-[10px] text-cx-text-muted">DISCHARGE</span>
                 </div>
                 <div>
-                  <span className="text-zinc-400">Max Draft: </span>
-                  <span className="font-semibold text-emerald-400">
+                  <span className="text-cx-text-secondary">Max Draft: </span>
+                  <span className="font-semibold text-emerald-500 dark:text-emerald-400">
                     {port.max_draft_m} m
                   </span>
                 </div>
                 <div>
-                  <span className="text-zinc-400">Max LOA: </span>
+                  <span className="text-cx-text-secondary">Max LOA: </span>
                   <span>{port.max_loa_m} m</span>
                 </div>
                 {port.avg_turnaround_hours && (
                   <div>
-                    <span className="text-zinc-400">Avg Turnaround: </span>
+                    <span className="text-cx-text-secondary">Avg Turnaround: </span>
                     <span>{port.avg_turnaround_hours} hours</span>
                   </div>
                 )}
                 {/* Live Anchorage Congestion Queue */}
-                <div className="border-t border-[#27272a] pt-1.5 mt-1.5 space-y-1">
+                <div className="border-t border-cx-border-subtle pt-1.5 mt-1.5 space-y-1">
                   <div className="flex items-center justify-between text-[11px]">
-                    <span className="text-zinc-400">Expected Wait:</span>
-                    <span className="font-semibold text-amber-400">
+                    <span className="text-cx-text-secondary">Expected Wait:</span>
+                    <span className="font-semibold text-amber-500">
                       ~{port.avg_turnaround_hours || 72}h
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-[10px]">
-                    <span className="text-zinc-500">Anchorage Queue:</span>
-                    <span className="text-zinc-300 font-semibold">
+                    <span className="text-cx-text-muted">Anchorage Queue:</span>
+                    <span className="text-cx-text font-semibold">
                       {Math.max(1, Math.round((port.avg_turnaround_hours || 72) / 24))} vessels waiting
                     </span>
                   </div>
@@ -349,11 +363,11 @@ export function LiveMapInner({
               }}
             >
               <Tooltip direction="top" offset={[0, -14]} opacity={0.95}>
-                <div className="font-mono text-xs text-[#ededed]">
-                  <div className="font-semibold text-blue-300">
+                <div className="font-mono text-xs text-cx-text">
+                  <div className="font-semibold text-blue-500">
                     {vessel.name || `MMSI ${vessel.mmsi}`}
                   </div>
-                  <div className="text-[10px] text-zinc-400">
+                  <div className="text-[10px] text-cx-text-secondary">
                     {vessel.inferred_class || "Cargo"} •{" "}
                     {vessel.speed ? `${vessel.speed.toFixed(1)} kn` : "0 kn"}
                   </div>

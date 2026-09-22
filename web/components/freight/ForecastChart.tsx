@@ -17,11 +17,10 @@ import {
   TrendingDown,
   Minus,
   Info,
-  ShieldCheck,
-  Calendar,
   Sliders,
   Sparkles,
 } from "lucide-react";
+import { useTheme } from "../providers/ThemeProvider";
 
 export type BalticIndex = "BDI" | "BCI" | "BPI" | "BSI" | "BHSI";
 
@@ -92,8 +91,8 @@ const INDEX_CONFIG: Record<
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:8000";
 
-// Custom dark terminal tooltip
-function CustomTooltip({ active, payload, label }: any) {
+// Custom theme-aware tooltip
+function CustomTooltip({ active, payload }: any) {
   if (!active || !payload || !payload.length) return null;
 
   const dataPoint = payload[0]?.payload;
@@ -106,36 +105,36 @@ function CustomTooltip({ active, payload, label }: any) {
   const spreadPct = p50 > 0 ? ((spread / p50) * 100).toFixed(1) : "0";
 
   return (
-    <div className="rounded-lg border border-[#27272a] bg-[#121214] p-3 shadow-2xl font-mono text-xs text-[#ededed] space-y-2">
-      <div className="flex items-center justify-between border-b border-[#1f1f23] pb-1.5 gap-4">
-        <span className="font-semibold text-blue-400">{dataPoint.formattedDate}</span>
-        <span className="text-[10px] text-zinc-500">{dataPoint.rawDate}</span>
+    <div className="rounded-lg border border-cx-border-subtle bg-cx-card p-3 shadow-2xl font-mono text-xs text-cx-text space-y-2">
+      <div className="flex items-center justify-between border-b border-cx-border pb-1.5 gap-4">
+        <span className="font-semibold text-blue-500">{dataPoint.formattedDate}</span>
+        <span className="text-[10px] text-cx-text-muted">{dataPoint.rawDate}</span>
       </div>
 
       <div className="space-y-1">
         <div className="flex items-center justify-between gap-4">
-          <span className="text-zinc-400">P90 (Upper 90%):</span>
-          <span className="font-semibold text-blue-300">
+          <span className="text-cx-text-secondary">P90 (Upper 90%):</span>
+          <span className="font-semibold text-blue-400">
             {p90.toLocaleString(undefined, { maximumFractionDigits: 1 })}
           </span>
         </div>
         <div className="flex items-center justify-between gap-4">
-          <span className="text-zinc-400">P50 (Median Forecast):</span>
-          <span className="font-semibold text-white">
+          <span className="text-cx-text-secondary">P50 (Median Forecast):</span>
+          <span className="font-semibold text-cx-text">
             {p50.toLocaleString(undefined, { maximumFractionDigits: 1 })}
           </span>
         </div>
         <div className="flex items-center justify-between gap-4">
-          <span className="text-zinc-400">P10 (Lower 10%):</span>
-          <span className="font-semibold text-blue-400">
+          <span className="text-cx-text-secondary">P10 (Lower 10%):</span>
+          <span className="font-semibold text-blue-500">
             {p10.toLocaleString(undefined, { maximumFractionDigits: 1 })}
           </span>
         </div>
       </div>
 
-      <div className="border-t border-[#1f1f23] pt-1.5 flex items-center justify-between text-[11px] text-zinc-400">
+      <div className="border-t border-cx-border pt-1.5 flex items-center justify-between text-[11px] text-cx-text-secondary">
         <span>Uncertainty Spread:</span>
-        <span className="text-amber-400 font-semibold">
+        <span className="text-amber-500 font-semibold">
           &plusmn;{Math.round(spread / 2)} pts ({spreadPct}%)
         </span>
       </div>
@@ -144,6 +143,7 @@ function CustomTooltip({ active, payload, label }: any) {
 }
 
 export function ForecastChart() {
+  const { theme } = useTheme();
   const [selectedIndex, setSelectedIndex] = useState<BalticIndex>("BDI");
   const [data, setData] = useState<ForecastResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -183,20 +183,23 @@ export function ForecastChart() {
     };
   }, [selectedIndex]);
 
-  // Transform data for Recharts stacked shaded envelope
+  // Transform raw API arrays into Recharts-friendly data objects
   const chartData = useMemo(() => {
     if (!data || !data.dates) return [];
+
     return data.dates.map((dateStr, i) => {
-      const p10 = Number(data.p10[i] ?? 0);
-      const p50 = Number(data.p50[i] ?? 0);
-      const p90 = Number(data.p90[i] ?? 0);
+      const p10 = data.p10[i] ?? 0;
+      const p50 = data.p50[i] ?? 0;
+      const p90 = data.p90[i] ?? 0;
+
       const dateObj = new Date(dateStr);
-      const formattedDate = dateObj.toLocaleDateString("en-US", {
+      const formattedDate = dateObj.toLocaleDateString("en-IN", {
         month: "short",
         day: "numeric",
       });
 
       return {
+        dateIndex: i,
         rawDate: dateStr,
         formattedDate,
         p10,
@@ -208,15 +211,19 @@ export function ForecastChart() {
     });
   }, [data]);
 
-  // Compute Y-Axis domain
-  const [yMin, yMax] = useMemo(() => {
-    if (!chartData.length) return [1000, 2000];
-    const min = Math.min(...chartData.map((d) => d.p10));
-    const max = Math.max(...chartData.map((d) => d.p90));
-    return [Math.floor(min * 0.96), Math.ceil(max * 1.04)];
+  // Compute nice Y-axis domain
+  const { yMin, yMax } = useMemo(() => {
+    if (!chartData.length) return { yMin: 0, yMax: 2000 };
+    const allVals = chartData.flatMap((d) => [d.p10, d.p50, d.p90]);
+    const min = Math.min(...allVals);
+    const max = Math.max(...allVals);
+    const padding = (max - min) * 0.15 || 100;
+    return {
+      yMin: Math.max(0, Math.floor(min - padding)),
+      yMax: Math.ceil(max + padding),
+    };
   }, [chartData]);
 
-  // Model metrics values
   const pinballLgbm =
     data?.model_metrics?.lightgbm?.pinball_loss_avg !== undefined
       ? data.model_metrics.lightgbm.pinball_loss_avg.toFixed(1)
@@ -230,26 +237,26 @@ export function ForecastChart() {
   const currentConfig = INDEX_CONFIG[selectedIndex];
 
   return (
-    <div className="w-full rounded-xl border border-[#1f1f23] bg-[#121214] p-4 sm:p-6 space-y-5 shadow-lg">
+    <div className="w-full rounded-xl border border-cx-border bg-cx-card p-4 sm:p-6 space-y-5 shadow-lg">
       {/* ── Header: Title & Index Selector Tabs ── */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-[#1f1f23] pb-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-cx-border pb-4">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-lg font-bold tracking-tight text-[#ededed]">
+            <h2 className="text-lg font-bold tracking-tight text-cx-text">
               28-Day Probabilistic Freight Forecast
             </h2>
-            <span className="rounded bg-blue-950/60 border border-blue-800/60 px-2 py-0.5 font-mono text-[10px] text-blue-400 font-semibold">
+            <span className="rounded bg-blue-500/10 border border-blue-500/30 px-2 py-0.5 font-mono text-[10px] text-blue-500 font-semibold">
               P10 / P50 / P90
             </span>
           </div>
-          <p className="mt-0.5 text-xs text-zinc-400">
+          <p className="mt-0.5 text-xs text-cx-text-secondary">
             {currentConfig.name} ({currentConfig.label}) &bull;{" "}
-            <span className="text-zinc-300">{currentConfig.vessel}</span>
+            <span className="text-cx-text font-medium">{currentConfig.vessel}</span>
           </p>
         </div>
 
         {/* Index Switcher Tabs: BDI, BCI, BPI, BSI, BHSI */}
-        <div className="flex flex-wrap items-center gap-1 rounded-lg border border-[#1f1f23] bg-[#0d0d0f] p-1">
+        <div className="flex flex-wrap items-center gap-1 rounded-lg border border-cx-border bg-cx-surface p-1">
           {(["BDI", "BCI", "BPI", "BSI", "BHSI"] as BalticIndex[]).map((idx) => {
             const isSelected = selectedIndex === idx;
             return (
@@ -259,7 +266,7 @@ export function ForecastChart() {
                 className={`rounded px-3 py-1.5 font-mono text-xs font-semibold transition ${
                   isSelected
                     ? "bg-blue-600 text-white shadow-sm"
-                    : "text-zinc-400 hover:bg-[#18181c] hover:text-[#ededed]"
+                    : "text-cx-text-secondary hover:bg-cx-hover hover:text-cx-text"
                 }`}
               >
                 {idx}
@@ -270,23 +277,23 @@ export function ForecastChart() {
       </div>
 
       {/* ── Sub-header: Trend, Confidence, and Model Note ── */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-[#1f1f23] bg-[#161619] p-3 text-xs font-mono">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-cx-border bg-cx-surface p-3 text-xs font-mono">
         <div className="flex flex-wrap items-center gap-3">
           {/* Trend Badge */}
           <div className="flex items-center gap-1.5">
-            <span className="text-zinc-500 text-[11px] uppercase">Trajectory:</span>
+            <span className="text-cx-text-muted text-[11px] uppercase">Trajectory:</span>
             {data?.trend === "up" ? (
-              <span className="inline-flex items-center gap-1 rounded bg-emerald-950/40 border border-emerald-800/40 px-2 py-0.5 text-emerald-400 font-semibold">
+              <span className="inline-flex items-center gap-1 rounded bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 text-emerald-600 dark:text-emerald-400 font-semibold">
                 <TrendingUp className="h-3.5 w-3.5" />
                 <span>UPWARD TREND</span>
               </span>
             ) : data?.trend === "down" ? (
-              <span className="inline-flex items-center gap-1 rounded bg-rose-950/40 border border-rose-800/40 px-2 py-0.5 text-rose-400 font-semibold">
+              <span className="inline-flex items-center gap-1 rounded bg-rose-500/10 border border-rose-500/30 px-2 py-0.5 text-rose-600 dark:text-rose-400 font-semibold">
                 <TrendingDown className="h-3.5 w-3.5" />
                 <span>DOWNWARD TREND</span>
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 rounded bg-zinc-800/60 border border-zinc-700 px-2 py-0.5 text-zinc-300 font-semibold">
+              <span className="inline-flex items-center gap-1 rounded bg-cx-hover border border-cx-border px-2 py-0.5 text-cx-text-secondary font-semibold">
                 <Minus className="h-3.5 w-3.5" />
                 <span>FLAT / SIDEWAYS</span>
               </span>
@@ -295,27 +302,27 @@ export function ForecastChart() {
 
           {/* Confidence Badge */}
           <div className="flex items-center gap-1.5">
-            <span className="text-zinc-500 text-[11px] uppercase">Confidence:</span>
-            <span className="rounded bg-blue-950/50 border border-blue-800/50 px-2 py-0.5 text-blue-300 font-semibold">
+            <span className="text-cx-text-muted text-[11px] uppercase">Confidence:</span>
+            <span className="rounded bg-blue-500/10 border border-blue-500/30 px-2 py-0.5 text-blue-500 font-semibold">
               {data?.confidence ? `${Math.round(data.confidence * 100)}%` : "--"}
             </span>
           </div>
 
           {lgbmMape && (
-            <div className="hidden md:flex items-center gap-1 text-zinc-400 text-[11px]">
+            <div className="hidden md:flex items-center gap-1 text-cx-text-secondary text-[11px]">
               <span>P50 MAPE:</span>
-              <span className="text-[#ededed] font-semibold">{lgbmMape.toFixed(1)}%</span>
+              <span className="text-cx-text font-semibold">{lgbmMape.toFixed(1)}%</span>
             </div>
           )}
         </div>
 
         {/* Real Model Metrics One-Line Note */}
-        <div className="flex items-center gap-1.5 text-zinc-400 text-[11px]">
-          <Sparkles className="h-3.5 w-3.5 text-blue-400 shrink-0" />
+        <div className="flex items-center gap-1.5 text-cx-text-secondary text-[11px]">
+          <Sparkles className="h-3.5 w-3.5 text-blue-500 shrink-0" />
           <span>
             LightGBM quantile &middot; backtested pinball loss{" "}
-            <strong className="text-blue-300">{pinballLgbm}</strong> vs seasonal-naive{" "}
-            <span className="text-zinc-500">{pinballNaive}</span>
+            <strong className="text-blue-500 font-semibold">{pinballLgbm}</strong> vs seasonal-naive{" "}
+            <span className="text-cx-text-muted">{pinballNaive}</span>
           </span>
         </div>
       </div>
@@ -323,12 +330,12 @@ export function ForecastChart() {
       {/* ── Main Chart Canvas ── */}
       <div className="relative h-80 w-full">
         {loading ? (
-          <div className="flex h-full w-full flex-col items-center justify-center font-mono text-xs text-zinc-500 space-y-2">
+          <div className="flex h-full w-full flex-col items-center justify-center font-mono text-xs text-cx-text-muted space-y-2">
             <div className="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent" />
             <span>Computing LightGBM quantile trajectories for {selectedIndex}&hellip;</span>
           </div>
         ) : error ? (
-          <div className="flex h-full w-full items-center justify-center font-mono text-xs text-rose-400">
+          <div className="flex h-full w-full items-center justify-center font-mono text-xs text-rose-500">
             {error}
           </div>
         ) : (
@@ -339,31 +346,39 @@ export function ForecastChart() {
             >
               <defs>
                 <linearGradient id="forecastBandGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.25} />
-                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.05} />
+                  <stop
+                    offset="5%"
+                    stopColor="var(--cx-accent)"
+                    stopOpacity={theme === "light" ? 0.35 : 0.25}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor="var(--cx-accent)"
+                    stopOpacity={theme === "light" ? 0.12 : 0.05}
+                  />
                 </linearGradient>
               </defs>
 
               <CartesianGrid
                 strokeDasharray="3 3"
-                stroke="#1f1f23"
+                stroke="var(--cx-border)"
                 vertical={false}
               />
 
               <XAxis
                 dataKey="formattedDate"
-                stroke="#52525b"
-                tick={{ fill: "#71717a", fontSize: 10, fontFamily: "monospace" }}
+                stroke="var(--cx-border-subtle)"
+                tick={{ fill: "var(--cx-text-muted)", fontSize: 10, fontFamily: "monospace" }}
                 tickLine={false}
-                axisLine={{ stroke: "#27272a" }}
+                axisLine={{ stroke: "var(--cx-border-subtle)" }}
               />
 
               <YAxis
                 domain={[yMin, yMax]}
-                stroke="#52525b"
-                tick={{ fill: "#71717a", fontSize: 10, fontFamily: "monospace" }}
+                stroke="var(--cx-border-subtle)"
+                tick={{ fill: "var(--cx-text-muted)", fontSize: 10, fontFamily: "monospace" }}
                 tickLine={false}
-                axisLine={{ stroke: "#27272a" }}
+                axisLine={{ stroke: "var(--cx-border-subtle)" }}
                 tickFormatter={(val) => Math.round(val).toLocaleString()}
               />
 
@@ -392,7 +407,8 @@ export function ForecastChart() {
               <Line
                 type="monotone"
                 dataKey="p90"
-                stroke="#60a5fa"
+                stroke="var(--cx-accent)"
+                strokeOpacity={0.7}
                 strokeDasharray="3 3"
                 strokeWidth={1}
                 dot={false}
@@ -402,7 +418,8 @@ export function ForecastChart() {
               <Line
                 type="monotone"
                 dataKey="p10"
-                stroke="#60a5fa"
+                stroke="var(--cx-accent)"
+                strokeOpacity={0.7}
                 strokeDasharray="3 3"
                 strokeWidth={1}
                 dot={false}
@@ -410,11 +427,11 @@ export function ForecastChart() {
                 name="P10 Lower"
               />
 
-              {/* P50 Median Forecast Line */}
+              {/* P50 Median Forecast Line using var(--cx-accent) */}
               <Line
                 type="monotone"
                 dataKey="p50"
-                stroke="#3b82f6"
+                stroke="var(--cx-accent)"
                 strokeWidth={2.5}
                 dot={false}
                 isAnimationActive={false}
@@ -426,12 +443,12 @@ export function ForecastChart() {
       </div>
 
       {/* ── Deliberate Honesty Caption ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-lg border border-blue-900/40 bg-blue-950/20 p-3.5 text-xs font-mono">
-        <div className="flex items-start sm:items-center gap-2.5 text-zinc-300">
-          <Info className="h-4 w-4 shrink-0 text-blue-400 mt-0.5 sm:mt-0" />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-lg border border-blue-500/30 bg-blue-500/10 p-3.5 text-xs font-mono">
+        <div className="flex items-start sm:items-center gap-2.5 text-cx-text">
+          <Info className="h-4 w-4 shrink-0 text-blue-500 mt-0.5 sm:mt-0" />
           <div>
-            <span className="font-semibold text-blue-300">Methodology Note: </span>
-            <span className="text-zinc-200">
+            <span className="font-semibold text-blue-500">Methodology Note: </span>
+            <span className="text-cx-text-secondary">
               Forecast is on the real Baltic index. Lane ₹/tonne is estimated — see Decision.
             </span>
           </div>
@@ -449,7 +466,7 @@ export function ForecastChart() {
                     ? "Handysize"
                     : "Panamax"
           }&dest=paradip`}
-          className="inline-flex items-center gap-1.5 rounded bg-blue-600/20 border border-blue-500/40 px-3 py-1.5 text-xs font-semibold text-blue-300 hover:bg-blue-600 hover:text-white transition shrink-0"
+          className="inline-flex items-center gap-1.5 rounded bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-500 transition shrink-0 shadow-xs"
         >
           <Sliders className="h-3.5 w-3.5" />
           <span>Evaluate Lane in Decision &rarr;</span>
