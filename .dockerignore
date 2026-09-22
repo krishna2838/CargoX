@@ -1,0 +1,9 @@
+.git/
+web/
+**/__pycache__/
+**/*.pyc
+**/.env
+**/.env.*
+api/.venv/
+api/cargox_vessels.db*
+api/cargox.duckdb*

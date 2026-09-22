@@ -1,12 +1,16 @@
 services:
   - type: web
     name: cargox-api
-    env: python
-    rootDir: api
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    runtime: docker
+    plan: free
+    # Build context is the repo root so the image gets both api/ and data/
+    dockerfilePath: ./api/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
     envVars:
       - key: DEMO_MODE
         value: "true"
+      # Tighten after the frontend is live, e.g.
+      # "https://cargox.vercel.app,https://cargox-*.vercel.app"
       - key: CORS_ORIGINS
         value: "*"

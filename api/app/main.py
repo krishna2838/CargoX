@@ -50,6 +50,7 @@ from app.router_decision import router as decision_router
 from app.router_weather import router as weather_router
 from app.router_routes import router as routes_router
 import os
+import re
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
@@ -74,9 +75,19 @@ app = FastAPI(title="CargoX API", version="0.1.0", lifespan=lifespan)
 cors_origins_env = os.getenv("CORS_ORIGINS", "*")
 allowed_origins = [o.strip() for o in cors_origins_env.split(",") if o.strip()]
 
+# Starlette matches allow_origins literally, so wildcard entries such as
+# "https://cargox-*.vercel.app" (Vercel preview URLs) go into a regex instead.
+exact_origins = [o for o in allowed_origins if "*" not in o]
+wildcard_origins = [o for o in allowed_origins if "*" in o and o != "*"]
+origin_regex = (
+    "|".join(re.escape(o).replace(r"\*", r"[a-z0-9-]+") for o in wildcard_origins)
+    or None
+)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"] if "*" in allowed_origins else allowed_origins,
+    allow_origins=["*"] if "*" in allowed_origins else exact_origins,
+    allow_origin_regex=origin_regex,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

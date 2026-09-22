@@ -9,8 +9,10 @@ ENV PYTHONUNBUFFERED=1 \
 WORKDIR /workspace
 
 # Install minimal OS dependencies for healthchecks and runtime
+# (libgomp1 = OpenMP runtime required by the LightGBM wheel)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
+    libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python requirements

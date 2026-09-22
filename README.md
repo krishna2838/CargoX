@@ -168,13 +168,14 @@ In the maritime logistics industry, domain credibility depends on knowing exactl
 1. Fork or push this repository to GitHub.
 2. In [Render Dashboard](https://dashboard.render.com), click **New +** $\to$ **Blueprint**.
 3. Select this repository. Render will automatically read `render.yaml` and configure:
-   - Root Directory: `api`
-   - Build Command: `pip install -r requirements.txt`
-   - Start Command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-4. Set Environment Variables:
-   - `DEMO_MODE=true`
-   - `CORS_ORIGINS=*`
-   - (Optional) `AISSTREAM_API_KEY=your_key`
+   - Runtime: Docker (`api/Dockerfile`, build context = repo root so `data/` is included)
+   - Plan: Free, health check on `/health`
+   - Env: `DEMO_MODE=true`, `CORS_ORIGINS=*`
+4. (Optional) Add `AISSTREAM_API_KEY=your_key` for live AIS.
+5. Once the frontend is live, tighten `CORS_ORIGINS`, e.g.
+   `https://cargox.vercel.app,https://cargox-*.vercel.app` (`*` wildcards are supported for preview URLs).
+
+> Render's free tier sleeps after ~15 min idle; the first request takes 30–60 s. Hit `/health` a few minutes before a demo.
 
 #### Option 2: Docker / Cloud Run / Railway
 The backend includes a production multi-stage Dockerfile (`api/Dockerfile`):
@@ -206,7 +207,7 @@ docker run -p 8000:8000 -e PORT=8000 -e DEMO_MODE=true cargox-api
 | **API** | `AISSTREAM_API_KEY` | `""` | WebSocket API key from [aisstream.io](https://aisstream.io) for live vessel streaming. |
 | **API** | `CARGOX_DATA_DIR` | `<root>/data` | Directory containing `bdi_history.csv`, `pinksheet.csv`, `demo_fleet.json`. |
 | **API** | `CARGOX_VESSELS_DB_PATH` | `api/cargox_vessels.db`| SQLite database file for AIS vessel records. |
-| **API** | `CORS_ORIGINS` | `*` | Allowed CORS origins for the API. |
+| **API** | `CORS_ORIGINS` | `*` | Comma-separated allowed CORS origins. Entries may use `*` wildcards (e.g. `https://cargox-*.vercel.app`). |
 | **API** | `PORT` | `8000` | Port for Uvicorn server binding (injected automatically by Render/Railway/Cloud Run). |
 | **WEB** | `NEXT_PUBLIC_API_BASE` | `http://localhost:8000` | Base URL for the FastAPI backend. |
 | **WEB** | `NEXT_PUBLIC_CARTO_API_KEY` | `cb1_3tnn_1_a5741039008996c36a4ff345` | CARTO raster basemap tile access key (Dark Matter / Positron @2x). Falls back to OpenStreetMap if omitted. |
