@@ -21,6 +21,7 @@ import {
   RiskExplanationCard,
 } from "@/components/decision/RiskExplanationCard";
 import { RouteRiskStrip } from "@/components/decision/RouteRiskStrip";
+import { DecisionRouteMap } from "@/components/decision/DecisionRouteMap";
 import {
   ArrowLeft,
   AlertTriangle,
@@ -305,6 +306,16 @@ function DecisionContent() {
                 sparklineData={sparklineData}
               />
             )}
+
+            {/* Section 2.2: Sea Route Mini-Map Panel */}
+            <DecisionRouteMap
+              loadPortId={formValues.load_port_id}
+              destPortId={formValues.dest_port_id}
+              commodity={formValues.commodity}
+              cargoTonnes={formValues.cargo_tonnes}
+              vesselClass={rec?.vessel_class || "Supramax"}
+              exampleVessel={winningScenario?.example_vessel}
+            />
 
             {/* Section 2.5: Sea Lane Route Weather & Cyclone Risk Strip */}
             <RouteRiskStrip

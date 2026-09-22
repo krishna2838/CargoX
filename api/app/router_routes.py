@@ -12,6 +12,7 @@ Exposes:
 
 from __future__ import annotations
 
+import json
 import logging
 import math
 from datetime import datetime, timedelta, timezone
@@ -21,6 +22,7 @@ import searoute as sr
 from fastapi import APIRouter, HTTPException, Query
 
 from app.db import (
+    get_conn,
     get_load_port_by_id,
     get_load_ports,
     get_port_by_id,
@@ -99,17 +101,43 @@ def compute_single_route(
     origin = [load_lng, load_lat]  # [lng, lat] for searoute & GeoJSON
     destination = [dest_lng, dest_lat]
 
-    # ── 2. Sea Route Geometry (searoute with fallback) ────────────────────
+    # ── 2. Sea Route Geometry (DuckDB cache + searoute + fallback) ───────
     route_type = "searoute"
+    coordinates: list[list[float]] | None = None
+    distance_nm: float | None = None
+
+    # Check cache first
     try:
-        route = sr.searoute(origin, destination, units="naut", append_orig_dest=True)
-        coordinates = route["geometry"]["coordinates"]
-        distance_nm = round(float(route["properties"]["length"]), 1)
-    except Exception as exc:
-        log.warning("searoute failed (%s -> %s): %s; using great-circle fallback", load_port_id, dest_port_id, exc)
-        route_type = "great_circle_fallback"
-        coordinates = [origin, destination]
-        distance_nm = _haversine_nm(load_lat, load_lng, dest_lat, dest_lng)
+        db_conn = get_conn()
+        cached = db_conn.execute(
+            "SELECT distance_nm, geometry FROM distances WHERE load_port_id = ? AND dest_port_id = ?",
+            [load_port["id"], dest_port["id"]],
+        ).fetchone()
+        if cached and cached[0] and cached[1]:
+            distance_nm = float(cached[0])
+            coordinates = json.loads(cached[1])
+            route_type = "searoute"
+    except Exception as cache_err:
+        log.debug("Distance cache check skipped: %s", cache_err)
+
+    if coordinates is None or distance_nm is None:
+        try:
+            route = sr.searoute(origin, destination, units="naut", append_orig_dest=True)
+            coordinates = route["geometry"]["coordinates"]
+            distance_nm = round(float(route["properties"]["length"]), 1)
+            try:
+                db_conn = get_conn()
+                db_conn.execute(
+                    "INSERT OR REPLACE INTO distances (load_port_id, dest_port_id, distance_nm, geometry) VALUES (?, ?, ?, ?)",
+                    [load_port["id"], dest_port["id"], distance_nm, json.dumps(coordinates)],
+                )
+            except Exception as store_err:
+                log.warning("Could not cache route geometry: %s", store_err)
+        except Exception as exc:
+            log.warning("searoute failed (%s -> %s): %s; using great-circle fallback", load_port_id, dest_port_id, exc)
+            route_type = "great_circle_fallback"
+            coordinates = [origin, destination]
+            distance_nm = _haversine_nm(load_lat, load_lng, dest_lat, dest_lng)
 
     # ── 3. Market Rates Context ───────────────────────────────────────────
     pinksheet = query_latest_pinksheet()

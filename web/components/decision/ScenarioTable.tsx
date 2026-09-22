@@ -63,6 +63,10 @@ export interface ScenarioItem {
     beam?: number | null;
     draft?: number | null;
     speed?: number | null;
+    latitude?: number | null;
+    longitude?: number | null;
+    inferred_class?: string;
+    eta?: string;
   } | null;
   rank?: number;
 }

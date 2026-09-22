@@ -191,9 +191,12 @@ export function RouteSearchPanel({
         )}
       </div>
 
-      {/* ── Collapsible Floating Route Search Panel ── */}
+      {/* ── Collapsible Route Search Panel (Bottom Sheet on Mobile, Floating Panel on Desktop) ── */}
       {isOpen && (
-        <div className="absolute top-26 left-3 z-[420] w-[360px] max-w-[95vw] rounded-xl border border-cx-border bg-cx-surface/95 p-4 backdrop-blur-md shadow-2xl font-mono text-xs text-cx-text animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="fixed md:absolute inset-x-0 md:inset-x-auto bottom-0 md:bottom-auto md:top-26 md:left-3 z-[500] w-full md:w-[360px] max-h-[85vh] md:max-h-[80vh] overflow-y-auto rounded-t-2xl md:rounded-xl border-t md:border border-cx-border bg-cx-surface/98 p-4 backdrop-blur-md shadow-2xl font-mono text-xs text-cx-text animate-in fade-in slide-in-from-bottom-4 md:slide-in-from-top-2 duration-200">
+          {/* Mobile bottom sheet drag handle */}
+          <div className="mx-auto mb-2 h-1 w-12 rounded-full bg-cx-border md:hidden" />
+
           <div className="flex items-center justify-between border-b border-cx-border pb-2.5 mb-3">
             <div className="flex items-center gap-2">
               <Navigation className="h-4 w-4 text-blue-500" />

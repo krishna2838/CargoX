@@ -251,6 +251,7 @@ def init_db() -> None:
             load_port_id VARCHAR,
             dest_port_id VARCHAR,
             distance_nm DOUBLE,
+            geometry TEXT,
             PRIMARY KEY (load_port_id, dest_port_id)
         )
     """)
