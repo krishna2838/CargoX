@@ -111,6 +111,17 @@ body {
 .leaflet-container {
   background-color: var(--cx-bg) !important;
   font-family: inherit !important;
+  /* Trap Leaflet's internal pane/control z-indexes (400–800) inside the map's
+     own stacking context. Without this, sibling overlays like the vessel side
+     panel have to out-stack z-800 just to render above the tiles. */
+  isolation: isolate;
+}
+
+/* Vessel side-panel safety net: force it above the map no matter where its
+   ancestor stacking contexts land. Paired with the z-[1000] utility on the
+   panel wrapper via SidePanel's className prop. */
+.vessel-side-panel {
+  z-index: 1000 !important;
 }
 
 /* Brightness/contrast filter only applies when using dark CARTO tiles */

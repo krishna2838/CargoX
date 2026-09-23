@@ -94,6 +94,7 @@ export function VesselSidePanel({ vessel, onClose }: VesselSidePanelProps) {
     <SidePanel
       isOpen={!!vessel}
       onClose={onClose}
+      className="vessel-side-panel z-[1000]"
       title={currentVessel.name || `MMSI ${currentVessel.mmsi}`}
       subtitle={`MMSI: ${currentVessel.mmsi}${currentVessel.imo ? ` • IMO: ${currentVessel.imo}` : ""}`}
       badge={
