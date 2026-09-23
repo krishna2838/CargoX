@@ -106,6 +106,26 @@ app.include_router(routes_router)
 # ENDPOINTS
 # ═══════════════════════════════════════════════════════════════════════════
 
+@app.get("/")
+async def root():
+    """API landing page — describes what this service is and where to look."""
+    return {
+        "name": "CargoX API",
+        "version": "0.1.0",
+        "status": "online",
+        "description": "Freight forecasting and vessel chartering decision engine for Indian bulk importers",
+        "docs": "/docs",
+        "endpoints": {
+            "health": "/health",
+            "freight": "/freight/latest",
+            "forecast": "/forecast",
+            "decision": "POST /decision",
+            "vessels": "/vessels/live",
+            "ports": "/ports",
+        },
+    }
+
+
 @app.get("/health")
 async def health():
     return {"status": "ok"}
