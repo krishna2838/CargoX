@@ -124,6 +124,54 @@ body {
   z-index: 1000 !important;
 }
 
+/* ── Map overlay layout coordination ──────────────────────────────────────
+   The vessel side panel (fixed right drawer, md:w-[420px]) can collide with
+   the Vessel Classes legend at bottom-right of the map, and the expanded
+   Tonnage List drawer covers the bottom portion of the map where the Sea
+   Route Voyage Comparison Matrix wants to sit. Rather than lifting state up
+   into page.tsx, we use CSS :has() to react to the DOM the affected panels
+   put in the tree. */
+
+/* When the vessel side panel is mounted (SidePanel only renders when open),
+   shift the legend inboard by panel width (420) + 16px gutter, on md+ where
+   the drawer actually slides in from the right. */
+@media (min-width: 768px) {
+  body:has(.vessel-side-panel) .vessel-classes-legend {
+    right: 436px;
+  }
+}
+
+/* When the Tonnage List drawer is expanded, push the Sea Route Comparison
+   Matrix up above it (drawer max-h is 18rem body + ~42px header + padding,
+   so 22rem clears it comfortably). */
+body:has(.tonnage-list-drawer[data-expanded="true"]) .sea-route-matrix {
+  bottom: 22rem;
+}
+
+/* ── Port name tooltip styling ────────────────────────────────────────────
+   Replaces the inline HTML label inside createPortIcon so per-port
+   direction offsets (see PORT_TOOLTIP_LAYOUT in LiveMapInner) can spread the
+   East-Coast India cluster (Paradip/Dhamra/Haldia/Sandheads/Vizag/Gangavaram)
+   without labels stacking on top of one another. */
+.leaflet-tooltip.port-label-tooltip {
+  background-color: var(--cx-bg-surface, #121214);
+  border: 1px solid var(--cx-border, #27272a);
+  color: #4338ca;
+  font-family: monospace;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+.leaflet-tooltip.port-label-tooltip::before {
+  border-top-color: var(--cx-border, #27272a);
+  border-right-color: var(--cx-border, #27272a);
+  border-bottom-color: var(--cx-border, #27272a);
+  border-left-color: var(--cx-border, #27272a);
+}
+
 /* Brightness/contrast filter only applies when using dark CARTO tiles */
 .leaflet-container[data-tile-type="carto-dark"] .leaflet-tile,
 .leaflet-tile.carto-dark-tile {

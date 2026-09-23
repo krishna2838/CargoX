@@ -122,8 +122,11 @@ export function TonnageListDrawer({
   ];
 
   return (
+    // `tonnage-list-drawer` + `data-expanded` are read by globals.css to push
+    // the Sea Route Voyage Comparison Matrix up above the expanded drawer.
     <div
-      className={`absolute bottom-0 left-0 right-0 z-30 transition-all duration-300 ease-in-out ${
+      data-expanded={isOpen ? "true" : "false"}
+      className={`tonnage-list-drawer absolute bottom-0 left-0 right-0 z-30 transition-all duration-300 ease-in-out ${
         isOpen ? "translate-y-0" : "translate-y-[calc(100%-42px)]"
       } ${className}`}
     >

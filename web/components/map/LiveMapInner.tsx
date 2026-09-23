@@ -111,30 +111,43 @@ function createVesselIcon(vessel: VesselItem, isSelected: boolean): L.DivIcon {
 }
 
 // ── Custom SVG port marker icon factory ────────────────────────────────────
-function createPortIcon(port: PortData): L.DivIcon {
+// The port name is rendered via a Leaflet <Tooltip permanent> with per-port
+// direction offsets (see PORT_TOOLTIP_LAYOUT) so the East-Coast cluster
+// (Paradip / Dhamra / Haldia / Sandheads / Vizag / Gangavaram) stays legible.
+function createPortIcon(): L.DivIcon {
   const html = `
-    <div style="position: relative; display: flex; flex-direction: column; align-items: center;">
-      <div style="background-color: #1e1b4b; border: 1.5px solid #6366f1; border-radius: 9999px; padding: 4px; box-shadow: 0 0 10px rgba(99,102,241,0.5);">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="5" r="3"></circle>
-          <line x1="12" y1="22" x2="12" y2="8"></line>
-          <path d="M5 12H2a10 10 0 0 0 20 0h-3"></path>
-        </svg>
-      </div>
-      <div style="margin-top: 2px; background-color: var(--cx-bg-surface, #121214); border: 1px solid var(--cx-border, #27272a); padding: 1px 5px; border-radius: 4px; font-family: monospace; font-size: 9px; font-weight: 600; color: #4338ca; white-space: nowrap; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
-        ${port.name} (${port.max_draft_m}m)
-      </div>
+    <div style="background-color: #1e1b4b; border: 1.5px solid #6366f1; border-radius: 9999px; padding: 4px; box-shadow: 0 0 10px rgba(99,102,241,0.5); display: inline-flex;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="5" r="3"></circle>
+        <line x1="12" y1="22" x2="12" y2="8"></line>
+        <path d="M5 12H2a10 10 0 0 0 20 0h-3"></path>
+      </svg>
     </div>
   `;
 
   return L.divIcon({
     html,
     className: "custom-port-icon",
-    iconSize: [60, 42],
-    iconAnchor: [30, 14],
-    popupAnchor: [0, -18],
+    iconSize: [26, 26],
+    iconAnchor: [13, 13],
+    popupAnchor: [0, -13],
   });
 }
+
+// Per-port tooltip placement to break up the East-Coast India cluster where
+// multiple ports sit within ~50 nm of each other and their labels overlap at
+// most zoom levels. Direction+offset are measured from the icon anchor.
+type PortTooltipLayout = { direction: "top" | "bottom" | "left" | "right"; offset: [number, number] };
+const PORT_TOOLTIP_LAYOUT: Record<string, PortTooltipLayout> = {
+  paradip:      { direction: "bottom", offset: [0, 4] },
+  dhamra:       { direction: "top",    offset: [0, -4] },
+  haldia:       { direction: "right",  offset: [8, 0] },
+  sandheads:    { direction: "left",   offset: [-8, 0] },
+  visakhapatnam:{ direction: "top",    offset: [0, -4] },
+  gangavaram:   { direction: "bottom", offset: [0, 4] },
+  gopalpur:     { direction: "right",  offset: [8, 0] },
+};
+const DEFAULT_PORT_TOOLTIP: PortTooltipLayout = { direction: "bottom", offset: [0, 4] };
 
 // ── Map view animator component ───────────────────────────────────────────
 function MapController({
@@ -269,7 +282,9 @@ export function LiveMapInner({
       </div>
 
       {/* ── Floating Legend Overlay ── */}
-      <div className="absolute bottom-14 right-3 z-[400] hidden sm:flex flex-col gap-1.5 rounded-lg border border-cx-border bg-cx-surface/95 p-2.5 backdrop-blur-md shadow-xl text-[11px] font-mono">
+      {/* `vessel-classes-legend` is used by globals.css to slide the legend
+          left when the vessel side panel opens so the two don't collide. */}
+      <div className="vessel-classes-legend absolute bottom-14 right-3 z-[400] hidden sm:flex flex-col gap-1.5 rounded-lg border border-cx-border bg-cx-surface/95 p-2.5 backdrop-blur-md shadow-xl text-[11px] font-mono transition-[right] duration-300 ease-in-out">
         <span className="text-[10px] text-cx-text-muted font-semibold uppercase tracking-wider">
           Vessel Classes
         </span>
@@ -331,15 +346,26 @@ export function LiveMapInner({
         />
 
         {/* Discharge Port Markers */}
-        {ports.map((port) => (
+        {ports.map((port) => {
+          const layout = PORT_TOOLTIP_LAYOUT[port.id] ?? DEFAULT_PORT_TOOLTIP;
+          return (
           <Marker
             key={`port-${port.id}`}
             position={[port.lat, port.lng]}
-            icon={createPortIcon(port)}
+            icon={createPortIcon()}
             eventHandlers={{
               click: () => onSelectPort && onSelectPort(port),
             }}
           >
+            <Tooltip
+              permanent
+              direction={layout.direction}
+              offset={layout.offset}
+              className="port-label-tooltip"
+              opacity={1}
+            >
+              {port.name} ({port.max_draft_m}m)
+            </Tooltip>
             <Popup>
               <div className="p-3 space-y-1.5 font-mono text-xs text-cx-text">
                 <div className="flex items-center justify-between gap-2 border-b border-cx-border-subtle pb-1.5">
@@ -382,7 +408,8 @@ export function LiveMapInner({
               </div>
             </Popup>
           </Marker>
-        ))}
+          );
+        })}
 
         {/* Live Vessels Markers */}
         {filteredVessels.map((vessel) => {

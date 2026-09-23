@@ -357,7 +357,7 @@ export function RouteSearchPanel({
 
       {/* ── Summary Comparison Table Below Map (Docked Bottom Strip) ── */}
       {activeRoutes.length > 0 && (
-        <div className="absolute bottom-14 left-3 right-3 sm:right-auto sm:max-w-4xl z-[400] rounded-xl border border-cx-border bg-cx-surface/95 backdrop-blur-md shadow-2xl font-mono text-xs overflow-hidden">
+        <div className="sea-route-matrix absolute bottom-14 left-3 right-3 sm:right-auto sm:max-w-4xl z-[400] rounded-xl border border-cx-border bg-cx-surface/95 backdrop-blur-md shadow-2xl font-mono text-xs overflow-hidden transition-[bottom] duration-300 ease-in-out">
           <div className="flex items-center justify-between border-b border-cx-border px-3.5 py-2 bg-cx-bg/60">
             <div className="flex items-center gap-2">
               <Layers className="h-4 w-4 text-blue-500" />
