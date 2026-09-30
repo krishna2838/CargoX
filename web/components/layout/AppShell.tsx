@@ -4,15 +4,15 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Compass,
-  TrendingUp,
-  Sliders,
-  Layers,
+  Map as MapIcon,
+  LineChart,
+  Target,
+  CalendarClock,
+  SlidersHorizontal,
   Ship,
   Radio,
   Sun,
   Moon,
-  FileSignature,
 } from "lucide-react";
 import { useTheme } from "../providers/ThemeProvider";
 
@@ -79,38 +79,60 @@ export function AppShell({ children }: AppShellProps) {
     };
   }, []);
 
-  const navItems = [
+  // Grouped nav sections drive the desktop sidebar (with section headers)
+  // and the mobile bottom bar (flattened). Keeping both views off one
+  // source keeps them in sync when items are added/moved.
+  const navGroups: {
+    label: string;
+    items: {
+      href: string;
+      label: string;
+      icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+      description: string;
+    }[];
+  }[] = [
     {
-      href: "/",
-      label: "Live Map",
-      icon: Compass,
-      description: "Fleet tracking & East Coast ports",
+      label: "Overview",
+      items: [
+        {
+          href: "/",
+          label: "Live Map",
+          icon: MapIcon,
+          description: "Fleet tracking & East Coast ports",
+        },
+        {
+          href: "/freight",
+          label: "Freight",
+          icon: LineChart,
+          description: "Baltic indices & LightGBM forecast",
+        },
+      ],
     },
     {
-      href: "/freight",
-      label: "Freight",
-      icon: TrendingUp,
-      description: "Baltic indices & LightGBM forecast",
-    },
-    {
-      href: "/decision",
-      label: "Decision",
-      icon: Sliders,
-      description: "Procurement & charter engine",
-    },
-    {
-      href: "/contract",
-      label: "Contract",
-      icon: FileSignature,
-      description: "Multi-voyage contract planner",
-    },
-    {
-      href: "/what-if",
-      label: "What-If",
-      icon: Layers,
-      description: "Sensitivity & scenario analysis",
+      label: "Tools",
+      items: [
+        {
+          href: "/decision",
+          label: "Decision",
+          icon: Target,
+          description: "Procurement & charter engine",
+        },
+        {
+          href: "/contract",
+          label: "Contract",
+          icon: CalendarClock,
+          description: "Multi-voyage contract planner",
+        },
+        {
+          href: "/what-if",
+          label: "What-If",
+          icon: SlidersHorizontal,
+          description: "Sensitivity & scenario analysis",
+        },
+      ],
     },
   ];
+  const flatNavItems = navGroups.flatMap((g) => g.items);
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-cx-bg text-cx-text">
@@ -134,55 +156,74 @@ export function AppShell({ children }: AppShellProps) {
             </span>
           </Link>
 
-          {/* Navigation rows (icon + label) */}
-          <nav className="flex flex-col gap-1 px-2">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = pathname === item.href;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  title={`${item.label} — ${item.description}`}
-                  className={`relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-150 ${
-                    isActive
-                      ? "bg-blue-500/15 text-blue-500"
-                      : "text-cx-text-secondary hover:bg-cx-hover hover:text-cx-text"
+          {/* Grouped nav — one <section> per group with a small header */}
+          <nav className="flex flex-col px-2">
+            {navGroups.map((group, gi) => (
+              <section key={group.label} className="flex flex-col gap-1">
+                <h3
+                  className={`text-[10px] font-semibold tracking-widest uppercase px-4 pb-2 text-cx-text-muted ${
+                    gi === 0 ? "pt-2" : "pt-6"
                   }`}
                 >
-                  {/* Active left-edge indicator (task spec: border-l-2 blue) */}
-                  {isActive && (
-                    <span
-                      aria-hidden
-                      className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-0.5 rounded-r-full bg-blue-500"
-                    />
-                  )}
-                  <Icon className="h-5 w-5 shrink-0" />
-                  <span className="truncate">{item.label}</span>
-                </Link>
-              );
-            })}
+                  {group.label}
+                </h3>
+                {group.items.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = pathname === item.href;
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      title={`${item.label} — ${item.description}`}
+                      className={`relative flex items-center gap-3 rounded-lg pl-4 pr-3 py-2 text-sm font-medium transition-all duration-150 ease-out will-change-transform hover:translate-x-0.5 ${
+                        isActive
+                          ? "bg-blue-500/15 text-blue-500"
+                          : "text-cx-text-secondary hover:bg-cx-hover hover:text-cx-text"
+                      }`}
+                    >
+                      {/* 2px full-height active bar in blue-400 */}
+                      {isActive && (
+                        <span
+                          aria-hidden
+                          className="absolute inset-y-1 left-0 w-0.5 rounded-r-full bg-blue-400"
+                        />
+                      )}
+                      <Icon className="h-5 w-5 shrink-0" strokeWidth={1.75} />
+                      <span className="truncate">{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </section>
+            ))}
           </nav>
         </div>
 
-        {/* Live AIS Beacon (icon + label now that we have room) */}
-        <div
-          className="flex items-center gap-2.5 px-4"
-          title={fleetSource === "seeded" ? "Seeded fleet active (DEMO_MODE=true)" : "AISStream WebSocket live ingestion"}
-        >
-          <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-500 shrink-0">
-            <Radio className="h-4 w-4" />
-            <span className="absolute -top-0.5 -right-0.5 flex h-2 w-2">
-              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${fleetSource === "seeded" ? "bg-amber-400" : "bg-emerald-400"}`} />
-              <span className={`relative inline-flex rounded-full h-2 w-2 ${fleetSource === "seeded" ? "bg-amber-500" : "bg-emerald-500"}`} />
-            </span>
-          </div>
-          <div className="min-w-0">
-            <div className="text-[10px] font-mono uppercase tracking-wider text-cx-text-muted">
-              Fleet
+        {/* Version pill + AIS beacon stack (bottom of sidebar) */}
+        <div className="flex flex-col gap-3 px-4">
+          {/* Small version chip — sits just above the fleet indicator */}
+          <span className="inline-flex w-fit items-center rounded-full border border-cx-border bg-cx-bg px-2 py-0.5 text-[10px] font-mono tracking-wider text-cx-text-muted">
+            v0.1
+          </span>
+
+          {/* Live AIS Beacon */}
+          <div
+            className="flex items-center gap-2.5"
+            title={fleetSource === "seeded" ? "Seeded fleet active (DEMO_MODE=true)" : "AISStream WebSocket live ingestion"}
+          >
+            <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-500 shrink-0">
+              <Radio className="h-4 w-4" strokeWidth={1.75} />
+              <span className="absolute -top-0.5 -right-0.5 flex h-2 w-2">
+                <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${fleetSource === "seeded" ? "bg-amber-400" : "bg-emerald-400"}`} />
+                <span className={`relative inline-flex rounded-full h-2 w-2 ${fleetSource === "seeded" ? "bg-amber-500" : "bg-emerald-500"}`} />
+              </span>
             </div>
-            <div className="text-xs font-medium text-cx-text-secondary truncate">
-              {fleetSource === "seeded" ? "Seeded" : "AIS Live"}
+            <div className="min-w-0">
+              <div className="text-[10px] font-mono uppercase tracking-wider text-cx-text-muted">
+                Fleet
+              </div>
+              <div className="text-xs font-medium text-cx-text-secondary truncate">
+                {fleetSource === "seeded" ? "Seeded" : "AIS Live"}
+              </div>
             </div>
           </div>
         </div>
@@ -277,7 +318,7 @@ export function AppShell({ children }: AppShellProps) {
 
         {/* ── Mobile Bottom Navigation Bar (below 768px) ── */}
         <nav className="flex md:hidden h-14 items-center justify-around border-t border-cx-border bg-cx-surface px-2 z-40">
-          {navItems.map((item) => {
+          {flatNavItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
             return (
@@ -288,7 +329,7 @@ export function AppShell({ children }: AppShellProps) {
                   isActive ? "text-blue-500" : "text-cx-text-secondary hover:text-cx-text"
                 }`}
               >
-                <Icon className="h-5 w-5 mb-0.5" />
+                <Icon className="h-5 w-5 mb-0.5" strokeWidth={1.75} />
                 <span>{item.label}</span>
               </Link>
             );
