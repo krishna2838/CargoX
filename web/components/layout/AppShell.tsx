@@ -114,20 +114,28 @@ export function AppShell({ children }: AppShellProps) {
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-cx-bg text-cx-text">
-      {/* ── Desktop Left Sidebar (64px icon rail) ── */}
-      <aside className="hidden md:flex flex-col items-center justify-between border-r border-cx-border bg-cx-surface py-4 w-16 shrink-0 z-30 transition-colors duration-150">
-        <div className="flex flex-col items-center gap-6">
-          {/* Logo Mark */}
+      {/* ── Desktop Left Sidebar (expanded 224px, labels visible on md+) ── */}
+      {/* Mobile intentionally has no sidebar — the bottom nav below serves     */}
+      {/* that role. Icon sizing is unchanged; only the row layout and         */}
+      {/* container width grew so labels can sit alongside each icon.          */}
+      <aside className="hidden md:flex flex-col justify-between border-r border-cx-border bg-cx-surface py-4 w-56 shrink-0 z-30 transition-colors duration-150">
+        <div className="flex flex-col gap-6">
+          {/* Logo Mark + Wordmark */}
           <Link
             href="/"
-            className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600/10 border border-blue-500/30 text-blue-500 transition hover:bg-blue-600/20"
+            className="flex items-center gap-2.5 px-4 group"
             title="CargoX"
           >
-            <Ship className="h-5 w-5" />
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600/10 border border-blue-500/30 text-blue-500 transition group-hover:bg-blue-600/20 shrink-0">
+              <Ship className="h-5 w-5" />
+            </span>
+            <span className="text-sm font-semibold tracking-tight text-cx-text truncate">
+              CargoX
+            </span>
           </Link>
 
-          {/* Navigation icons */}
-          <nav className="flex flex-col items-center gap-2">
+          {/* Navigation rows (icon + label) */}
+          <nav className="flex flex-col gap-1 px-2">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
@@ -136,42 +144,47 @@ export function AppShell({ children }: AppShellProps) {
                   key={item.href}
                   href={item.href}
                   title={`${item.label} — ${item.description}`}
-                  className={`group relative flex h-10 w-10 items-center justify-center rounded-lg transition-all duration-150 ${
+                  className={`relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-150 ${
                     isActive
-                      ? "bg-blue-600/15 text-blue-500 border border-blue-500/40 shadow-xs"
+                      ? "bg-blue-500/15 text-blue-500"
                       : "text-cx-text-secondary hover:bg-cx-hover hover:text-cx-text"
                   }`}
                 >
-                  <Icon className="h-5 w-5" />
-                  {/* Active indicator bar */}
+                  {/* Active left-edge indicator (task spec: border-l-2 blue) */}
                   {isActive && (
-                    <span className="absolute -left-2 h-5 w-1 rounded-r-full bg-blue-500" />
+                    <span
+                      aria-hidden
+                      className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-0.5 rounded-r-full bg-blue-500"
+                    />
                   )}
-                  {/* Tooltip */}
-                  <span className="pointer-events-none absolute left-14 z-50 whitespace-nowrap rounded bg-cx-surface border border-cx-border-subtle px-2.5 py-1 text-xs font-medium text-cx-text shadow-lg opacity-0 transition-opacity group-hover:opacity-100">
-                    {item.label}
-                  </span>
+                  <Icon className="h-5 w-5 shrink-0" />
+                  <span className="truncate">{item.label}</span>
                 </Link>
               );
             })}
           </nav>
         </div>
 
-        {/* Live AIS Beacon */}
+        {/* Live AIS Beacon (icon + label now that we have room) */}
         <div
-          className="flex flex-col items-center gap-1.5"
+          className="flex items-center gap-2.5 px-4"
           title={fleetSource === "seeded" ? "Seeded fleet active (DEMO_MODE=true)" : "AISStream WebSocket live ingestion"}
         >
-          <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-500">
+          <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-500 shrink-0">
             <Radio className="h-4 w-4" />
             <span className="absolute -top-0.5 -right-0.5 flex h-2 w-2">
               <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${fleetSource === "seeded" ? "bg-amber-400" : "bg-emerald-400"}`} />
               <span className={`relative inline-flex rounded-full h-2 w-2 ${fleetSource === "seeded" ? "bg-amber-500" : "bg-emerald-500"}`} />
             </span>
           </div>
-          <span className="text-[9px] font-mono text-cx-text-muted uppercase tracking-tighter">
-            {fleetSource === "seeded" ? "SEEDED" : "AIS LIVE"}
-          </span>
+          <div className="min-w-0">
+            <div className="text-[10px] font-mono uppercase tracking-wider text-cx-text-muted">
+              Fleet
+            </div>
+            <div className="text-xs font-medium text-cx-text-secondary truncate">
+              {fleetSource === "seeded" ? "Seeded" : "AIS Live"}
+            </div>
+          </div>
         </div>
       </aside>
 
