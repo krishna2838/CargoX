@@ -12,6 +12,7 @@ import {
   Radio,
   Sun,
   Moon,
+  FileSignature,
 } from "lucide-react";
 import { useTheme } from "../providers/ThemeProvider";
 
@@ -96,6 +97,12 @@ export function AppShell({ children }: AppShellProps) {
       label: "Decision",
       icon: Sliders,
       description: "Procurement & charter engine",
+    },
+    {
+      href: "/contract",
+      label: "Contract",
+      icon: FileSignature,
+      description: "Multi-voyage contract planner",
     },
     {
       href: "/what-if",
