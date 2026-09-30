@@ -5,8 +5,16 @@
     "country": "AU",
     "lat": -20.3108,
     "lng": 118.5753,
-    "primary_cargo": ["iron_ore"],
-    "notes": "World's largest bulk-export port. BHP/Fortescue iron ore."
+    "primary_cargo": [
+      "iron_ore"
+    ],
+    "notes": "World's largest bulk-export port. BHP/Fortescue iron ore.",
+    "max_draft_m": 19.5,
+    "max_loa_m": 330,
+    "max_beam_m": 55,
+    "avg_turnaround_hours": 48,
+    "congestion_index_base": 0.35,
+    "seasonal_notes": "Tidal-dependent Capesize sailings; cyclone season Nov-Apr"
   },
   {
     "id": "dampier",
@@ -14,8 +22,16 @@
     "country": "AU",
     "lat": -20.6611,
     "lng": 116.7133,
-    "primary_cargo": ["iron_ore"],
-    "notes": "Rio Tinto's primary Pilbara iron ore export terminal."
+    "primary_cargo": [
+      "iron_ore"
+    ],
+    "notes": "Rio Tinto's primary Pilbara iron ore export terminal.",
+    "max_draft_m": 19.0,
+    "max_loa_m": 325,
+    "max_beam_m": 55,
+    "avg_turnaround_hours": 48,
+    "congestion_index_base": 0.3,
+    "seasonal_notes": "Cyclone season Nov-Apr; well-managed queue"
   },
   {
     "id": "newcastle",
@@ -23,17 +39,33 @@
     "country": "AU",
     "lat": -32.9283,
     "lng": 151.7817,
-    "primary_cargo": ["coal"],
-    "notes": "World's largest coal export port (thermal + coking)."
+    "primary_cargo": [
+      "coal"
+    ],
+    "notes": "World's largest coal export port (thermal + coking).",
+    "max_draft_m": 16.5,
+    "max_loa_m": 300,
+    "max_beam_m": 50,
+    "avg_turnaround_hours": 54,
+    "congestion_index_base": 0.55,
+    "seasonal_notes": "High congestion, queuing common"
   },
   {
     "id": "hay_point",
     "name": "Hay Point",
     "country": "AU",
-    "lat": -21.2750,
+    "lat": -21.275,
     "lng": 149.2917,
-    "primary_cargo": ["coal"],
-    "notes": "Major coking-coal export terminal in Queensland. Adjacent to Dalrymple Bay."
+    "primary_cargo": [
+      "coal"
+    ],
+    "notes": "Major coking-coal export terminal in Queensland. Adjacent to Dalrymple Bay.",
+    "max_draft_m": 17.5,
+    "max_loa_m": 305,
+    "max_beam_m": 50,
+    "avg_turnaround_hours": 50,
+    "congestion_index_base": 0.45,
+    "seasonal_notes": "DBCT + HPCT terminals; queue in demand peaks"
   },
   {
     "id": "gladstone",
@@ -41,17 +73,35 @@
     "country": "AU",
     "lat": -23.8489,
     "lng": 151.2694,
-    "primary_cargo": ["coal", "alumina", "lng"],
-    "notes": "Multi-commodity port; large thermal coal exports."
+    "primary_cargo": [
+      "coal",
+      "alumina",
+      "lng"
+    ],
+    "notes": "Multi-commodity port; large thermal coal exports.",
+    "max_draft_m": 14.0,
+    "max_loa_m": 280,
+    "max_beam_m": 45,
+    "avg_turnaround_hours": 56,
+    "congestion_index_base": 0.4,
+    "seasonal_notes": "Multi-commodity, tide-restricted"
   },
   {
     "id": "richards_bay",
     "name": "Richards Bay",
     "country": "ZA",
-    "lat": -28.7830,
+    "lat": -28.783,
     "lng": 32.0377,
-    "primary_cargo": ["coal"],
-    "notes": "Richards Bay Coal Terminal — South Africa's primary coal export facility."
+    "primary_cargo": [
+      "coal"
+    ],
+    "notes": "Richards Bay Coal Terminal — South Africa's primary coal export facility.",
+    "max_draft_m": 17.5,
+    "max_loa_m": 300,
+    "max_beam_m": 50,
+    "avg_turnaround_hours": 60,
+    "congestion_index_base": 0.5,
+    "seasonal_notes": "RBCT queues in peak season"
   },
   {
     "id": "samarinda",
@@ -59,16 +109,141 @@
     "country": "ID",
     "lat": -0.5022,
     "lng": 117.1536,
-    "primary_cargo": ["coal"],
-    "notes": "East Kalimantan coal export area. Barge-loaded anchorage operations common."
+    "primary_cargo": [
+      "coal"
+    ],
+    "notes": "East Kalimantan coal export area. Barge-loaded anchorage operations common.",
+    "max_draft_m": 13.0,
+    "max_loa_m": 260,
+    "max_beam_m": 45,
+    "avg_turnaround_hours": 72,
+    "congestion_index_base": 0.6,
+    "seasonal_notes": "Barge loading; monsoon delays Jun-Sep"
   },
   {
     "id": "banjarmasin",
     "name": "Banjarmasin (Taboneo)",
     "country": "ID",
     "lat": -3.4382,
-    "lng": 114.8500,
-    "primary_cargo": ["coal"],
-    "notes": "South Kalimantan coal transhipment hub. Predominantly barge-to-vessel loading."
+    "lng": 114.85,
+    "primary_cargo": [
+      "coal"
+    ],
+    "notes": "South Kalimantan coal transhipment hub. Predominantly barge-to-vessel loading.",
+    "max_draft_m": 12.5,
+    "max_loa_m": 250,
+    "max_beam_m": 45,
+    "avg_turnaround_hours": 72,
+    "congestion_index_base": 0.6,
+    "seasonal_notes": "Anchorage transhipment; monsoon Jun-Sep"
+  },
+  {
+    "id": "baltimore",
+    "name": "Baltimore",
+    "country": "US",
+    "lat": 39.2647,
+    "lng": -76.5722,
+    "primary_cargo": [
+      "coal",
+      "coking_coal"
+    ],
+    "notes": "US East Coast coking coal (CONSOL Marine, CSX exports)",
+    "max_draft_m": 15.0,
+    "max_loa_m": 290,
+    "max_beam_m": 50,
+    "avg_turnaround_hours": 48,
+    "congestion_index_base": 0.3,
+    "seasonal_notes": "US East Coast coking coal (CONSOL Marine, CSX exports)"
+  },
+  {
+    "id": "norfolk",
+    "name": "Norfolk",
+    "country": "US",
+    "lat": 36.9312,
+    "lng": -76.3436,
+    "primary_cargo": [
+      "coal",
+      "coking_coal",
+      "thermal_coal"
+    ],
+    "notes": "Lambert's Point (Norfolk Southern); major US coal export",
+    "max_draft_m": 15.0,
+    "max_loa_m": 290,
+    "max_beam_m": 50,
+    "avg_turnaround_hours": 48,
+    "congestion_index_base": 0.35,
+    "seasonal_notes": "Lambert's Point (Norfolk Southern); major US coal export"
+  },
+  {
+    "id": "beira",
+    "name": "Beira",
+    "country": "MZ",
+    "lat": -19.8436,
+    "lng": 34.8389,
+    "primary_cargo": [
+      "coal",
+      "coking_coal"
+    ],
+    "notes": "Vale Moatize link; cyclone Nov-Apr; draft-limited",
+    "max_draft_m": 11.0,
+    "max_loa_m": 230,
+    "max_beam_m": 32,
+    "avg_turnaround_hours": 72,
+    "congestion_index_base": 0.55,
+    "seasonal_notes": "Vale Moatize link; cyclone Nov-Apr; draft-limited"
+  },
+  {
+    "id": "maputo",
+    "name": "Maputo",
+    "country": "MZ",
+    "lat": -25.9692,
+    "lng": 32.5731,
+    "primary_cargo": [
+      "coal",
+      "chrome"
+    ],
+    "notes": "Matola coal terminal; South Africa overflow via rail",
+    "max_draft_m": 14.5,
+    "max_loa_m": 270,
+    "max_beam_m": 45,
+    "avg_turnaround_hours": 60,
+    "congestion_index_base": 0.45,
+    "seasonal_notes": "Matola coal terminal; South Africa overflow via rail"
+  },
+  {
+    "id": "vostochny",
+    "name": "Vostochny",
+    "country": "RU",
+    "lat": 42.7439,
+    "lng": 133.0778,
+    "primary_cargo": [
+      "coal",
+      "coking_coal"
+    ],
+    "notes": "Russia Far East; primary Asia-Pacific coal export",
+    "max_draft_m": 16.0,
+    "max_loa_m": 300,
+    "max_beam_m": 50,
+    "avg_turnaround_hours": 54,
+    "congestion_index_base": 0.4,
+    "seasonal_notes": "Russia Far East; primary Asia-Pacific coal export"
+  },
+  {
+    "id": "ust_luga",
+    "name": "Ust-Luga",
+    "country": "RU",
+    "lat": 59.6647,
+    "lng": 28.3892,
+    "primary_cargo": [
+      "coal",
+      "thermal_coal"
+    ],
+    "notes": "Baltic Sea; long-haul to India via Suez or Cape",
+    "max_draft_m": 16.0,
+    "max_loa_m": 290,
+    "max_beam_m": 45,
+    "avg_turnaround_hours": 54,
+    "congestion_index_base": 0.35,
+    "seasonal_notes": "Baltic Sea; long-haul to India via Suez or Cape"
   }
 ]
