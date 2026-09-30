@@ -49,6 +49,7 @@ from app.model.service import get_forecast_service
 from app.router_decision import router as decision_router
 from app.router_weather import router as weather_router
 from app.router_routes import router as routes_router
+from app.router_contract import router as contract_router
 import os
 import re
 
@@ -100,6 +101,7 @@ app.include_router(forecast_router)
 app.include_router(decision_router)
 app.include_router(weather_router)
 app.include_router(routes_router)
+app.include_router(contract_router)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
