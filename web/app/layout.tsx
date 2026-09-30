@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "../components/providers/ThemeProvider";
 import "./globals.css";
 
-const geistSans = Geist({
+// Primary body font is Inter. Kept behind the pre-existing
+// `--font-geist-sans` variable so nothing that references that token has
+// to change — globals.css just resolves the variable to Inter now.
+const interSans = Inter({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
@@ -28,7 +32,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${interSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
         <script

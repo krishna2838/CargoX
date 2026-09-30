@@ -86,9 +86,97 @@
 body {
   background-color: var(--cx-bg);
   color: var(--cx-text);
-  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* var(--font-geist-sans) now resolves to Inter (see layout.tsx). */
+  font-family:
+    var(--font-geist-sans), "Inter", ui-sans-serif, system-ui,
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow-x: hidden;
   transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* ── Shared UI utilities ──────────────────────────────────────────────────
+   These sit alongside Tailwind classes and are used by the polished ui/*
+   primitives (StatCard, DataTable) plus form components. They resolve to
+   the app's theme tokens so both light and dark modes remain readable. */
+
+/* Numeric readout typography — tabular figures + tighter tracking so
+   values line up column-wise on cards, tables and the sidebar. */
+.stat-num {
+  font-family: var(--font-geist-mono), ui-monospace, "SFMono-Regular",
+    Menlo, Monaco, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* Loading placeholder block. Uses a subtle theme-token background so the
+   pulse is visible in both themes without hardcoding a colour. */
+@keyframes cx-skeleton-pulse {
+  0%, 100% { opacity: 1;   }
+  50%      { opacity: 0.45; }
+}
+.skeleton {
+  background-color: var(--cx-bg-hover);
+  border-radius: 0.375rem;
+  animation: cx-skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+/* Standardised form input surface. Applied ALONGSIDE existing sizing
+   classes so it enhances (focus ring, text/background/border tokens)
+   without moving any layout. Uses tokens → survives light/dark. */
+.form-input {
+  background-color: var(--cx-bg);
+  color: var(--cx-text);
+  border: 1px solid var(--cx-border);
+  border-radius: 0.375rem;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+.form-input:hover:not(:disabled):not(:focus) {
+  border-color: var(--cx-border-subtle);
+}
+.form-input:focus,
+.form-input:focus-visible {
+  outline: none;
+  border-color: #60a5fa; /* blue-400 */
+  box-shadow: 0 0 0 1px rgba(96, 165, 250, 0.55);
+}
+.form-input:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Primary button micro-interactions — press feedback + visible keyboard
+   focus. Additive: existing bg/text/padding on the button decide the
+   look; this only layers ergonomics on top. */
+.btn-primary-fx {
+  transition:
+    transform 100ms ease,
+    background-color 150ms ease,
+    box-shadow 150ms ease;
+}
+.btn-primary-fx:active:not(:disabled) {
+  transform: scale(0.98);
+}
+.btn-primary-fx:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--cx-bg),
+    0 0 0 4px #60a5fa; /* blue-400 ring with a page-colour offset */
+}
+
+/* Page-title utilities — available for pages to opt in without needing
+   to change any structure or copy. Kept token-driven for theme support. */
+.page-title {
+  font-size: 1.125rem; /* text-lg */
+  line-height: 1.5rem;
+  font-weight: 600;
+  color: var(--cx-text);
+  letter-spacing: -0.01em;
+}
+.page-subtitle {
+  font-size: 0.875rem; /* text-sm */
+  line-height: 1.25rem;
+  color: var(--cx-text-secondary);
+  margin-top: 0.25rem;
 }
 
 /* Custom terminal scrollbars */

@@ -32,7 +32,7 @@ export function StatCard({
 }: StatCardProps) {
   return (
     <div
-      className={`relative overflow-hidden rounded-lg border border-cx-border bg-cx-card p-4 transition-all duration-150 hover:border-cx-border-subtle hover:bg-cx-hover ${className}`}
+      className={`relative overflow-hidden rounded-xl border border-cx-border bg-cx-card p-5 shadow-sm shadow-black/5 transition-all duration-150 hover:border-cx-border-subtle hover:bg-cx-hover ${className}`}
     >
       <div className="flex items-center justify-between gap-2">
         <span className="text-xs font-medium uppercase tracking-wider text-cx-text-secondary">
@@ -46,7 +46,7 @@ export function StatCard({
 
       <div className="mt-2.5 flex items-baseline justify-between gap-2">
         <div className="flex items-baseline gap-1.5">
-          <span className="font-mono text-2xl font-semibold tracking-tight text-cx-text">
+          <span className="stat-num text-2xl font-semibold text-cx-text">
             {value}
           </span>
           {unit && (

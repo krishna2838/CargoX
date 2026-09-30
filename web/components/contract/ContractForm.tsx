@@ -83,7 +83,7 @@ export function ContractForm({
             step={10000}
             value={values.annual_tonnes}
             onChange={(e) => patch("annual_tonnes", Math.max(0, Number(e.target.value) || 0))}
-            className="rounded border border-cx-border bg-cx-bg px-2.5 py-1.5 font-mono text-xs text-cx-text focus:border-blue-500 focus:outline-hidden"
+            className="form-input rounded border border-cx-border bg-cx-bg px-2.5 py-1.5 font-mono text-xs text-cx-text focus:border-blue-500 focus:outline-hidden"
           />
         </label>
         <label className="flex flex-col gap-1">
@@ -96,7 +96,7 @@ export function ContractForm({
             step={5000}
             value={values.parcel_size}
             onChange={(e) => patch("parcel_size", Math.max(0, Number(e.target.value) || 0))}
-            className="rounded border border-cx-border bg-cx-bg px-2.5 py-1.5 font-mono text-xs text-cx-text focus:border-blue-500 focus:outline-hidden"
+            className="form-input rounded border border-cx-border bg-cx-bg px-2.5 py-1.5 font-mono text-xs text-cx-text focus:border-blue-500 focus:outline-hidden"
           />
         </label>
       </div>
@@ -107,7 +107,7 @@ export function ContractForm({
         <select
           value={values.commodity}
           onChange={(e) => patch("commodity", e.target.value as ContractFormValues["commodity"])}
-          className="rounded border border-cx-border bg-cx-bg px-2.5 py-1.5 font-mono text-xs text-cx-text focus:border-blue-500 focus:outline-hidden"
+          className="form-input rounded border border-cx-border bg-cx-bg px-2.5 py-1.5 font-mono text-xs text-cx-text focus:border-blue-500 focus:outline-hidden"
         >
           {COMMODITY_OPTIONS.map((o) => (
             <option key={o.value} value={o.value}>{o.label}</option>
@@ -122,7 +122,7 @@ export function ContractForm({
           <select
             value={values.load_port_id}
             onChange={(e) => patch("load_port_id", e.target.value)}
-            className="rounded border border-cx-border bg-cx-bg px-2.5 py-1.5 font-mono text-xs text-cx-text focus:border-blue-500 focus:outline-hidden"
+            className="form-input rounded border border-cx-border bg-cx-bg px-2.5 py-1.5 font-mono text-xs text-cx-text focus:border-blue-500 focus:outline-hidden"
           >
             {loadPorts.length === 0 && <option value="">Loading…</option>}
             {loadPorts.map((p) => (
@@ -135,7 +135,7 @@ export function ContractForm({
           <select
             value={values.dest_port_id}
             onChange={(e) => patch("dest_port_id", e.target.value)}
-            className="rounded border border-cx-border bg-cx-bg px-2.5 py-1.5 font-mono text-xs text-cx-text focus:border-blue-500 focus:outline-hidden"
+            className="form-input rounded border border-cx-border bg-cx-bg px-2.5 py-1.5 font-mono text-xs text-cx-text focus:border-blue-500 focus:outline-hidden"
           >
             {destPorts.length === 0 && <option value="">Loading…</option>}
             {destPorts.map((p) => (
@@ -175,7 +175,7 @@ export function ContractForm({
           type="date"
           value={values.start_date}
           onChange={(e) => patch("start_date", e.target.value)}
-          className="rounded border border-cx-border bg-cx-bg px-2.5 py-1.5 font-mono text-xs text-cx-text focus:border-blue-500 focus:outline-hidden"
+          className="form-input rounded border border-cx-border bg-cx-bg px-2.5 py-1.5 font-mono text-xs text-cx-text focus:border-blue-500 focus:outline-hidden"
         />
       </label>
 
@@ -202,7 +202,7 @@ export function ContractForm({
         <button
           type="submit"
           disabled={loading || disabled || parcelTooBig}
-          className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 font-mono text-xs font-semibold text-white transition hover:bg-blue-500 shadow-md shadow-blue-600/20 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="btn-primary-fx flex-1 flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 font-mono text-xs font-semibold text-white transition hover:bg-blue-500 shadow-md shadow-blue-600/20 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading
             ? <><Loader2 className="h-4 w-4 animate-spin" /> Planning…</>

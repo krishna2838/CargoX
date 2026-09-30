@@ -88,7 +88,7 @@ export function DecisionForm({
                 step="5000"
                 value={values.cargo_tonnes}
                 onChange={(e) => handleChange("cargo_tonnes", Number(e.target.value))}
-                className="w-full rounded-lg border border-cx-border-subtle bg-cx-surface px-3 py-2 font-mono text-xs text-cx-text focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition"
+                className="form-input w-full rounded-lg border border-cx-border-subtle bg-cx-surface px-3 py-2 font-mono text-xs text-cx-text focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition"
                 required
               />
               <span className="pointer-events-none absolute right-3 top-2 font-mono text-xs text-cx-text-muted">
@@ -105,7 +105,7 @@ export function DecisionForm({
             <select
               value={values.commodity}
               onChange={(e) => handleChange("commodity", e.target.value)}
-              className="w-full rounded-lg border border-cx-border-subtle bg-cx-surface px-3 py-2 font-mono text-xs text-cx-text focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition"
+              className="form-input w-full rounded-lg border border-cx-border-subtle bg-cx-surface px-3 py-2 font-mono text-xs text-cx-text focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition"
             >
               <option value="coking_coal">Coking Coal (Met Coal FOB)</option>
               <option value="iron_ore">Iron Ore (62% Fe CFR/FOB)</option>
@@ -122,7 +122,7 @@ export function DecisionForm({
             <select
               value={values.load_port_id}
               onChange={(e) => handleChange("load_port_id", e.target.value)}
-              className="w-full rounded-lg border border-cx-border-subtle bg-cx-surface px-3 py-2 font-mono text-xs text-cx-text focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition"
+              className="form-input w-full rounded-lg border border-cx-border-subtle bg-cx-surface px-3 py-2 font-mono text-xs text-cx-text focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition"
             >
               {loadPorts.map((p) => (
                 <option key={p.id} value={p.id}>
@@ -141,7 +141,7 @@ export function DecisionForm({
             <select
               value={values.dest_port_id}
               onChange={(e) => handleChange("dest_port_id", e.target.value)}
-              className="w-full rounded-lg border border-cx-border-subtle bg-cx-surface px-3 py-2 font-mono text-xs text-cx-text focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition"
+              className="form-input w-full rounded-lg border border-cx-border-subtle bg-cx-surface px-3 py-2 font-mono text-xs text-cx-text focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition"
             >
               {destPorts.map((p) => (
                 <option key={p.id} value={p.id}>
@@ -161,7 +161,7 @@ export function DecisionForm({
               type="date"
               value={values.laycan_start}
               onChange={(e) => handleChange("laycan_start", e.target.value)}
-              className="w-full rounded-lg border border-cx-border-subtle bg-cx-surface px-3 py-2 font-mono text-xs text-cx-text focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition"
+              className="form-input w-full rounded-lg border border-cx-border-subtle bg-cx-surface px-3 py-2 font-mono text-xs text-cx-text focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition"
               required
             />
           </div>
@@ -176,7 +176,7 @@ export function DecisionForm({
               type="date"
               value={values.laycan_end}
               onChange={(e) => handleChange("laycan_end", e.target.value)}
-              className="w-full rounded-lg border border-cx-border-subtle bg-cx-surface px-3 py-2 font-mono text-xs text-cx-text focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition"
+              className="form-input w-full rounded-lg border border-cx-border-subtle bg-cx-surface px-3 py-2 font-mono text-xs text-cx-text focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition"
               required
             />
           </div>
@@ -187,7 +187,7 @@ export function DecisionForm({
           <button
             type="submit"
             disabled={loading}
-            className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 font-mono text-xs font-semibold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500 active:scale-[0.99] disabled:opacity-50 transition cursor-pointer"
+            className="btn-primary-fx flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 font-mono text-xs font-semibold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500 active:scale-[0.99] disabled:opacity-50 transition cursor-pointer"
           >
             {loading ? (
               <>

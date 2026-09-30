@@ -1,4 +1,5 @@
 import React from "react";
+import { Inbox } from "lucide-react";
 
 export interface Column<T> {
   key: string;
@@ -59,11 +60,19 @@ export function DataTable<T>({
         <tbody className="divide-y divide-cx-border font-mono text-cx-text">
           {data.length === 0 ? (
             <tr>
-              <td
-                colSpan={columns.length}
-                className="px-4 py-8 text-center text-cx-text-muted font-sans text-xs"
-              >
-                {emptyMessage}
+              <td colSpan={columns.length} className="px-4 py-12">
+                <div className="flex flex-col items-center justify-center gap-2 font-sans">
+                  <Inbox
+                    className="h-8 w-8 text-cx-text-muted opacity-60"
+                    strokeWidth={1.5}
+                    aria-hidden
+                  />
+                  <span className="text-sm text-cx-text-muted">
+                    {emptyMessage === "No records found"
+                      ? "Nothing to show yet"
+                      : emptyMessage}
+                  </span>
+                </div>
               </td>
             </tr>
           ) : (
