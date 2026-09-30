@@ -95,9 +95,12 @@ def run_decision_pipeline(
         class_name = v_class["class"]
         sub_index = v_class.get("baltic_index", "BDI")
 
-        # Feasibility check
-        feas = feasible(cargo_tonnes, dest_port, v_class)
+        # Feasibility check — screens BOTH loading and discharge ports.
+        # Origin-side check is silently skipped if load_port lacks the new
+        # constraint fields (backward-compat with older seed data).
+        feas = feasible(cargo_tonnes, dest_port, v_class, load_port=load_port)
         is_feasible = bool(feas["feasible"])
+        load_port_bottleneck = feas.get("load_port_bottleneck")
 
         # Structured feasibility detail
         port_draft = dest_port["max_draft_m"]
@@ -110,7 +113,28 @@ def run_decision_pipeline(
         dwt_max = v_class["dwt_max"]
 
         if not is_feasible:
-            if ves_draft > port_draft:
+            # Loading-port branch: only reachable when load_port has the new
+            # constraint fields AND the vessel exceeds one of them. Naming
+            # the load port explicitly stops the UI from blaming the
+            # discharge port for an origin-side failure.
+            if load_port_bottleneck is not None:
+                lp_name = load_port["name"]
+                if load_port_bottleneck == "draft":
+                    bottleneck = "loading_port_draft"
+                    b_diff = ves_draft - load_port["max_draft_m"]
+                    summary = f"Draft {ves_draft}m exceeds {lp_name} loading limit {load_port['max_draft_m']}m by {b_diff:.1f}m"
+                elif load_port_bottleneck == "loa":
+                    bottleneck = "loading_port_loa"
+                    b_diff = ves_loa - load_port["max_loa_m"]
+                    summary = f"LOA {ves_loa}m exceeds {lp_name} loading limit {load_port['max_loa_m']}m by {b_diff:.1f}m"
+                elif load_port_bottleneck == "beam":
+                    bottleneck = "loading_port_beam"
+                    b_diff = ves_beam - load_port["max_beam_m"]
+                    summary = f"Beam {ves_beam}m exceeds {lp_name} loading limit {load_port['max_beam_m']}m by {b_diff:.1f}m"
+                else:
+                    bottleneck = "loading_port_physical"
+                    summary = f"Physical constraint violation at {lp_name} loading port"
+            elif ves_draft > port_draft:
                 bottleneck = "draft"
                 b_diff = ves_draft - port_draft
                 summary = f"Draft {ves_draft}m exceeds {dest_port['name']} max {port_draft}m by {b_diff:.1f}m"
