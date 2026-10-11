@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "../components/providers/ThemeProvider";
+import { BackendWarmup } from "../components/providers/BackendWarmup";
 import "./globals.css";
 
 // Primary body font is Inter. Kept behind the pre-existing
@@ -51,6 +52,9 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-cx-bg text-cx-text transition-colors duration-150">
+        {/* Renders nothing — fires a background /health ping on first paint
+            so a sleeping Render container starts spinning up immediately. */}
+        <BackendWarmup />
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>

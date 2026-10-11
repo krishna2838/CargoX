@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { StatCard } from "@/components/ui/StatCard";
+import { PageSkeleton } from "@/components/ui/PageSkeleton";
 import { CommoditiesStrip } from "@/components/freight/CommoditiesStrip";
 import { ForecastChart } from "@/components/freight/ForecastChart";
 import { RefreshCw, BarChart3, Clock } from "lucide-react";
@@ -166,6 +167,13 @@ export default function FreightPage() {
           </div>
 
           {/* ── Section 1: Header Stat Row (BDI, BCI, BPI, BSI, BHSI) ── */}
+          {/* Before the first payload lands these cards would read "--" with
+              no sign anything is happening — which looks broken during a
+              Render cold start. Show the skeleton until data arrives; the
+              cards below are untouched and render exactly as before. */}
+          {!freightData ? (
+            <PageSkeleton variant="stats" cards={5} />
+          ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3.5">
             {statCards.map((card) => {
               const m = card.metric;
@@ -199,6 +207,7 @@ export default function FreightPage() {
               );
             })}
           </div>
+          )}
 
           {/* ── Section 3: Global Commodities & FX Strip ── */}
           <CommoditiesStrip />
